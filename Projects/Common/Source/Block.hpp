@@ -3,6 +3,7 @@
 #include "Entity.hpp"
 
 namespace Craftworld {
-	class Block : public Entity {
+	class Block :
+		public Entity {
 	};
 }

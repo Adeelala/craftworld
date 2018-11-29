@@ -5,7 +5,8 @@
 #include "Entity.hpp"
 
 namespace Craftworld {
-	class Player : public Entity {
+	class Player :
+		public Entity {
 			std::vector<Entity> inventory;
 	};
 }
