@@ -4,8 +4,11 @@
 
 #include "Chunk.hpp"
 
-namespace Craftworld {
+namespace CraftWorld {
 	class World {
-			std::vector<std::vector<std::vector<Chunk>>> chunks;
+			std::vector<Chunk> chunks;
+
+		public:
+			void update();
 	};
 }

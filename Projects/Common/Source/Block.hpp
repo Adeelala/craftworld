@@ -2,7 +2,7 @@
 
 #include "Entity.hpp"
 
-namespace Craftworld {
+namespace CraftWorld {
 	class Block :
 		public Entity {
 	};

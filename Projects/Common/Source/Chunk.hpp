@@ -5,11 +5,13 @@
 
 #include "Entity.hpp"
 
-namespace Craftworld {
+namespace CraftWorld {
 	class Chunk {
-			std::vector<std::vector<std::vector<Entity>>> entities;
+			std::vector<Entity> entities;
 
 		public:
+			void update();
+
 			std::string getHash() const;
 	};
 }
