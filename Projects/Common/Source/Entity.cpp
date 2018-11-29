@@ -5,6 +5,9 @@ namespace CraftWorld {
 	}
 
 	void Entity::update() {
+		// Add gravity
+		speedUp(Vector3D(0, -1, 0));
+
 		// Update position based on velocity
 		position += velocity;
 	}
