@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Entity.hpp"
+
 namespace Craftworld {
-	class Block {
+	class Block : public Entity {
 	};
 }
