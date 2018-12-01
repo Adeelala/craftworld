@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <boost/asio.hpp>
+
 #include "World.hpp"
 
 int main(int argc, char* argv[]) {
