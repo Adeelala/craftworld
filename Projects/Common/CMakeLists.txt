@@ -5,6 +5,7 @@ set(BOOST_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries/boost")
 find_package(Boost REQUIRED COMPONENTS serialization)
 
 # Make Boost library headers available
+set(Boost_INCLUDE_DIRS "../../Libraries/boost/include")
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Add common library target
