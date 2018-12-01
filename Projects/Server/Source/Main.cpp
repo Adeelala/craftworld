@@ -1,6 +1,8 @@
 #include <iostream>
 #include <boost/asio.hpp>
 
+#include <boost/asio.hpp>
+
 #include "World.hpp"
 
 using boost::asio::ip::tcp;
