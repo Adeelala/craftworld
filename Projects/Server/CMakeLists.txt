@@ -1,4 +1,5 @@
 # Make common and Boost library headers available
+set(Boost_INCLUDE_DIRS "../../Libraries/boost/include")
 include_directories(../Common/Source)
 include_directories(${Boost_INCLUDE_DIRS})
 
