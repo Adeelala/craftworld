@@ -10,9 +10,11 @@ This will download the Boost libraries from the official git repository. Next, e
 
 ```bash
 cd ./Libraries/boost
-./boostrap.sh --prefix=./
+./bootstrap.sh --prefix=./
 ./b2 install
 ```
+
+You can then proceed to open the project in CLion. To do this select open and then select the craftworld folder. To be able to build the project you need CMake and a toolchain (MinGW is preferred if you use windows).
 
 # Connecting to the DAS-4
 
