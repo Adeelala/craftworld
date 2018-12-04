@@ -1,8 +1,28 @@
 #include <array>
+#include <string>
 #include <boost/asio.hpp>
 #include <iostream>
 
 using boost::asio::ip::tcp;
+
+std::string receiveData(tcp::socket& socket) {
+	// Receive data
+	std::array<char, 128> buffer;
+	boost::system::error_code errorCode;
+	size_t length = socket.read_some(boost::asio::buffer(buffer), errorCode);
+
+	// Check if data was received
+	if(errorCode == boost::asio::error::eof) {
+		// The connection was closed, so exit
+		exit(0);
+	} else if(errorCode) {
+		// An error occurred
+		throw boost::system::system_error(errorCode);
+	}
+
+	// Return data
+	return std::string(buffer.data(), length);
+}
 
 int main(int argc, char* argv[]) {
 	std::cout << "Starting client...";
@@ -21,22 +41,10 @@ int main(int argc, char* argv[]) {
 
 	// Keep looping to receive data
 	while(true) {
-		// Receive data
-		std::array<char, 128> buffer;
-		boost::system::error_code errorCode;
-		size_t length = socket.read_some(boost::asio::buffer(buffer), errorCode);
-
-		// Check if data was received
-		if(errorCode == boost::asio::error::eof) {
-			// The connection was closed, so exit
-			break;
-		} else if(errorCode) {
-			// An error occurred
-			throw boost::system::system_error(errorCode);
-		}
+		std::string data = receiveData(socket);
 
 		// If we're here, print the data
-		std::cout.write(buffer.data(), length);
+		std::cout << data;
 	}
 
 	return 0;

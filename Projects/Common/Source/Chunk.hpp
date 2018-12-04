@@ -3,11 +3,12 @@
 #include <string>
 #include <vector>
 
+#include "Grid.hpp"
 #include "Entity.hpp"
 
 namespace CraftWorld {
 	class Chunk {
-			std::vector<Entity> entities;
+			Grid<Entity, int> entities_;
 
 		public:
 			void update();

@@ -3,7 +3,7 @@
 namespace CraftWorld {
 	void World::update() {
 		// Update all chunks
-		for(auto& chunk : chunks) {
+		for(auto& chunk : chunks_) {
 			chunk.update();
 		}
 	}
