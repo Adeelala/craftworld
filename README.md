@@ -19,7 +19,7 @@ cd ./Libraries/boost
 To connect to the DAS-4, first ssh into the VU proxy using this command:
 
 ```bash
-ssh ss{VUnetID}@ssh.data.vu.nl
+ssh {VUnetID}@ssh.data.vu.nl
 ```
 
 Then, once connected, use this command to connect to the DAS-4:
