@@ -2,11 +2,12 @@
 
 #include <vector>
 
+#include "Grid.hpp"
 #include "Chunk.hpp"
 
 namespace CraftWorld {
 	class World {
-			std::vector<Chunk> chunks;
+			Grid<Chunk, int> chunks_;
 
 		public:
 			void update();

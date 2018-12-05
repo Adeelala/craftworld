@@ -1,14 +1,12 @@
 #include <iostream>
 #include <boost/asio.hpp>
 
-#include <boost/asio.hpp>
-
 #include "World.hpp"
 
 using boost::asio::ip::tcp;
 
 int main(int argc, char* argv[]) {
-	std::cout << "Starting server...";
+	std::cout << "Starting server..." << std::flush;
 
 	CraftWorld::World world;
 
