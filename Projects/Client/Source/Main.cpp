@@ -25,7 +25,7 @@ std::string receiveData(tcp::socket& socket) {
 }
 
 int main(int argc, char* argv[]) {
-	std::cout << "Starting client...";
+	std::cout << "Starting client..." << std::endl;
 
 	// Initialize Boost Asio context
 	boost::asio::io_context ioContext;
@@ -37,14 +37,21 @@ int main(int argc, char* argv[]) {
 	tcp::socket socket(ioContext);
 
 	// Establish a connection
-	boost::asio::connect(socket, endpoints);
+	try
+	{
+		boost::asio::connect(socket, endpoints);
+	}
+	catch(std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 
 	// Keep looping to receive data
 	while(true) {
 		std::string data = receiveData(socket);
 
 		// If we're here, print the data
-		std::cout << data;
+		std::cout << data << std::flush;
 	}
 
 	return 0;
