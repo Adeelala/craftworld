@@ -24,7 +24,7 @@ namespace CraftWorld {
 	}
 
 	template<typename ItemType, typename PositionType>
-	std::vector<ItemType> Grid<ItemType, PositionType>::get(const Vector3D<PositionType>& position) const {
+	std::vector<ItemType> Grid<ItemType, PositionType>::get(const PositionType& position) const {
 		std::vector<ItemType> result;
 
 		for(auto iterator = items_.begin(); (iterator = std::find_if(
@@ -44,13 +44,13 @@ namespace CraftWorld {
 	}
 
 	template<typename ItemType, typename PositionType>
-	void Grid<ItemType, PositionType>::place(const ItemType& item, const Vector3D<PositionType>& position) {
+	void Grid<ItemType, PositionType>::place(const ItemType& item, const PositionType& position) {
 		items_.push_back(item);
 		itemPositions_[std::make_shared<ItemType>(*--items_.end())] = position;
 	}
 
 	template<typename ItemType, typename PositionType>
-	void Grid<ItemType, PositionType>::move(const Vector3D<PositionType>& oldPosition, const Vector3D<PositionType>& newPosition) {
+	void Grid<ItemType, PositionType>::move(const PositionType& oldPosition, const PositionType& newPosition) {
 		for(auto iterator = itemPositions_.begin(); (iterator = std::find_if(
 			iterator, itemPositions_.end(), [&](const auto& itemPosition) {
 				return itemPosition.second == oldPosition;

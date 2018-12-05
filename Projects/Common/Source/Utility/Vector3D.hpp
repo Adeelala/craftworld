@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace CraftWorld {
+namespace CraftWorld::Utility {
 	template<typename Type>
 	class Vector3D {
 			std::vector<Type> value;

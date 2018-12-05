@@ -5,14 +5,16 @@
 #include <vector>
 #include <utility>
 
-#include "Vector3D.hpp"
+#include "Utility/Vector3D.hpp"
 
 namespace CraftWorld {
-	template<typename ItemType, typename PositionType>
+	template<typename ItemType, typename PositionValueType>
 	class Grid {
+			using PositionType = Utility::Vector3D<PositionValueType>;
+
 			std::vector<ItemType> items_;
 
-			std::map<std::shared_ptr<ItemType>, Vector3D<PositionType>> itemPositions_;
+			std::map<std::shared_ptr<ItemType>, PositionType> itemPositions_;
 
 		public:
 			typename std::vector<ItemType>::iterator begin();
@@ -28,7 +30,7 @@ namespace CraftWorld {
 			 * @param position The position to retrieve.
 			 * @return The items.
 			 */
-			std::vector<ItemType> get(const Vector3D<PositionType>& position) const;
+			std::vector<ItemType> get(const PositionType& position) const;
 
 			/**
 			 * Gets all items in this grid.
@@ -41,13 +43,13 @@ namespace CraftWorld {
 			 * @param item The item to place.
 			 * @param position The position to place the item.
 			 */
-			void place(const ItemType& item, const Vector3D<PositionType>& position);
+			void place(const ItemType& item, const PositionType& position);
 
 			/**
 			 * Moves all items from the specified old position to a new position.
 			 * @param oldPosition The old position.
 			 * @param newPosition The new position.
 			 */
-			void move(const Vector3D<PositionType>& oldPosition, const Vector3D<PositionType>& newPosition);
+			void move(const PositionType& oldPosition, const PositionType& newPosition);
 	};
 }

@@ -8,9 +8,9 @@ namespace CraftWorld {
 
 	void Chunk::update() {
 		// Update entities
-		for(auto& entity : entities_) {
+		for(auto& entity : getAll()) {
 			// Update the entity
-			entity.update();
+			//entity.update();
 		}
 	}
 }
