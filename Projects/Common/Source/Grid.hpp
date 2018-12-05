@@ -11,12 +11,16 @@ namespace CraftWorld {
 	template<typename ItemType, typename PositionType>
 	class Grid {
 			std::vector<ItemType> items_;
+
 			std::map<std::shared_ptr<ItemType>, Vector3D<PositionType>> itemPositions_;
 
 		public:
 			typename std::vector<ItemType>::iterator begin();
+
 			typename std::vector<ItemType>::const_iterator begin() const;
+
 			typename std::vector<ItemType>::iterator end();
+
 			typename std::vector<ItemType>::const_iterator end() const;
 
 			/**

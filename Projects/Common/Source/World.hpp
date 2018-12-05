@@ -6,9 +6,8 @@
 #include "Chunk.hpp"
 
 namespace CraftWorld {
-	class World {
-			Grid<Chunk, int> chunks_;
-
+	class World :
+		public Grid<Chunk, int> {
 		public:
 			void update();
 	};

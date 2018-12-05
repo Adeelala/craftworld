@@ -7,9 +7,8 @@
 #include "Entity.hpp"
 
 namespace CraftWorld {
-	class Chunk {
-			Grid<Entity, int> entities_;
-
+	class Chunk :
+		public Grid<Entity, int> {
 		public:
 			void update();
 

@@ -5,7 +5,7 @@ set(BOOST_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries/boost")
 find_package(Boost REQUIRED COMPONENTS serialization)
 
 # Set Boost linker flags
-set(CMAKE_CXX_FLAGS  "-pthread ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 
 # Make common and Boost library headers available
 include_directories(../Common/Source)
