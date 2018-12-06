@@ -1,8 +1,12 @@
 #include "Connection.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
+#include "World.hpp"
 
 namespace CraftWorld {
 	boost::shared_ptr<Connection> Connection::create(boost::asio::io_context& io_context) {
@@ -15,7 +19,19 @@ namespace CraftWorld {
 
 	void Connection::start() {
 		std::cout << "Made a connection!" << std::endl;
-		message_ = "Hello world!";
+
+		// Create test world
+		World world({ 16, 16, 16 }, { 16, 16, 16 });
+
+		// Serialize World
+		std::stringstream stringStream;
+		boost::archive::text_oarchive archive(stringStream);
+		world.serialize(archive);
+
+		// Set message
+		message_ = stringStream.str();
+
+		// Send message
 		boost::asio::async_write(
 			socket_, boost::asio::buffer(message_), boost::bind(
 				&Connection::handle_write,
