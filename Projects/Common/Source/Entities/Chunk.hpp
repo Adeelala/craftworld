@@ -2,6 +2,9 @@
 
 #include <string>
 #include <vector>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "Entity.hpp"
 #include "../Grid.hpp"
@@ -26,8 +29,10 @@ namespace CraftWorld::Entities {
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				Entity::serialize(archive, version);
-				Grid<Entities::Entity>::serialize(archive, version);
+				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Entity);
+				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Grid<Entities::Entity>);
 			}
 	};
 }
+
+BOOST_CLASS_EXPORT_KEY(CraftWorld::Entities::Chunk)

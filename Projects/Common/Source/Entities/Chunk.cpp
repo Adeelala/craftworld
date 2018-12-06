@@ -60,3 +60,5 @@ namespace CraftWorld::Entities {
 		return true;
 	}
 }
+
+BOOST_CLASS_EXPORT_IMPLEMENT(CraftWorld::Entities::Chunk)

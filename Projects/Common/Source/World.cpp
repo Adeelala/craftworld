@@ -52,3 +52,5 @@ namespace CraftWorld {
 		return result;
 	}
 }
+
+BOOST_CLASS_EXPORT_IMPLEMENT(CraftWorld::World)

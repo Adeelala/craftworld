@@ -5,3 +5,4 @@ namespace CraftWorld::Entities {
 	}
 }
 
+BOOST_CLASS_EXPORT_IMPLEMENT(CraftWorld::Entities::Block)
