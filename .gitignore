@@ -584,4 +584,4 @@ DerivedData/
 !default.perspectivev3
 
 ## Project
-Libraries/*
+Libraries/**
