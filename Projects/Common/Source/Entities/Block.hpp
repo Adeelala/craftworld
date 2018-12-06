@@ -17,6 +17,10 @@ namespace CraftWorld::Entities {
 			Block(const Type& type = AIR);
 
 			template<typename ArchiveType>
-			void serialize(ArchiveType& archive);
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				Entity::serialize(archive, version);
+
+				archive << type;
+			}
 	};
 }

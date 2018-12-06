@@ -26,7 +26,7 @@ namespace CraftWorld {
 		// Serialize World
 		std::stringstream stringStream;
 		boost::archive::text_oarchive archive(stringStream);
-		world.serialize(archive);
+		world.serialize(archive, 1);
 
 		// Set message
 		message_ = stringStream.str();

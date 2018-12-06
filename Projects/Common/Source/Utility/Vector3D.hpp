@@ -43,7 +43,7 @@ namespace CraftWorld::Utility {
 			}
 
 			template<typename ArchiveType>
-			void serialize(ArchiveType& archive) {
+			void serialize(ArchiveType& archive, const unsigned int& version) {
 				archive & x;
 				archive & y;
 				archive & z;

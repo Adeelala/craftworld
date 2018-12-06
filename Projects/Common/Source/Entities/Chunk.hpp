@@ -23,5 +23,11 @@ namespace CraftWorld::Entities {
 			 * @return Whether the Chunk is empty.
 			 */
 			bool isEmpty() const;
+
+			template<typename ArchiveType>
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				Entity::serialize(archive, version);
+				Grid<Entities::Entity>::serialize(archive, version);
+			}
 	};
 }

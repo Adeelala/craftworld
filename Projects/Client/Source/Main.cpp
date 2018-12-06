@@ -19,7 +19,7 @@ void dataHandler(const std::string& data) {
 
 	// Deserialize the World
 	World world;
-	world.serialize(archive);
+	world.serialize(archive, 1);
 
 	std::cout << "Deserialized world!";
 }

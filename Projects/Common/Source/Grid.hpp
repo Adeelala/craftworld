@@ -2,6 +2,9 @@
 
 #include <memory>
 #include <vector>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/archive/text_oarchive.hpp>
 
 #include "Entities/Entity.hpp"
 #include "Utility/Vector3D.hpp"
@@ -12,10 +15,7 @@ namespace CraftWorld {
 		public:
 			std::vector<std::vector<std::vector<std::shared_ptr<Type>>>> entities;
 
-			Grid() {
-			}
-
-			Grid(const Utility::Vector3D<int>& size) : entities(
+			Grid(const Utility::Vector3D<int>& size = { 0, 0, 0 }) : entities(
 				std::vector<std::vector<std::vector<std::shared_ptr<Type>>>>(
 					size.x,
 					std::vector<std::vector<std::shared_ptr<Type>>>(
@@ -41,7 +41,7 @@ namespace CraftWorld {
 			}
 
 			template<typename ArchiveType>
-			void serialize(ArchiveType& archive) {
+			void serialize(ArchiveType& archive, const unsigned int& version) {
 				archive & entities;
 			}
 	};

@@ -10,6 +10,6 @@ namespace CraftWorld::Entities {
 	class Player :
 		public Entity {
 		public:
-			Player(const Utility::Vector3D<int>& velocity);
+			Player(const Utility::Vector3D<int>& velocity = { 0, 0, 0 });
 	};
 }
