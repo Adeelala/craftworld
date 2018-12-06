@@ -1,3 +1,6 @@
+#include <memory>
+
+#include <memory>
 #include <iostream>
 #include <boost/asio.hpp>
 
@@ -5,10 +8,14 @@
 
 using boost::asio::ip::tcp;
 
+CraftWorld::World createTestWorld() {
+
+}
+
 int main(int argc, char* argv[]) {
 	std::cout << "Starting server..." << std::flush;
 
-	CraftWorld::World world;
+	CraftWorld::World world({ 8, 8, 8 }, { 8, 8, 8 });
 
 	boost::asio::io_service ioService;
 
