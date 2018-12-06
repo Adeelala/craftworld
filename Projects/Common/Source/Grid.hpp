@@ -30,7 +30,7 @@ namespace CraftWorld {
 			}
 
 			/**
-			 * Swaps the entities at the two positions
+			 * Swaps the entities at the two positions.
 			 * @param first The first position.
 			 * @param second The second position.
 			 */
