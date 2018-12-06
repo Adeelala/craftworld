@@ -4,7 +4,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace CraftWorld::Server {
+namespace CraftWorld {
 	boost::shared_ptr<Connection> Connection::create(boost::asio::io_context& io_context) {
 		return pointer(new Connection(io_context));
 	}

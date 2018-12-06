@@ -2,7 +2,7 @@
 
 #include <boost/bind.hpp>
 
-namespace CraftWorld::Server {
+namespace CraftWorld {
 	Server::Server(boost::asio::io_context& io_context) : acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000)) {
 		start_accept();
 	}

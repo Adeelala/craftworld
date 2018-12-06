@@ -4,9 +4,9 @@
 #include "Server.hpp"
 #include "World.hpp"
 
-int main(int argc, char* argv[]) {
-	using namespace CraftWorld::Server;
+using namespace CraftWorld;
 
+int main(int argc, char* argv[]) {
 	std::cout << "Starting server..." << std::endl;
 
 	try {

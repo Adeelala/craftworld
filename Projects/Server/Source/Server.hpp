@@ -6,7 +6,7 @@
 
 using boost::asio::ip::tcp;
 
-namespace CraftWorld::Server {
+namespace CraftWorld {
 	class Server {
 		public:
 			// The server will listen on the specified port

@@ -5,7 +5,7 @@
 
 using boost::asio::ip::tcp;
 
-namespace CraftWorld::Server {
+namespace CraftWorld {
 	class Connection :
 		public boost::enable_shared_from_this<Connection> {
 		public:

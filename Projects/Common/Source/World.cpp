@@ -32,7 +32,7 @@ namespace CraftWorld {
 
 	std::vector<std::vector<char>> World::createMap() {
 		// Detect map size
-		Utility::Vector3D<int> size = { entities.size(), 0, 0 };
+		Utility::Vector3D<int> size = { static_cast<int>(entities.size()), 0, 0 };
 		for(int x = 0; x < entities.size(); ++x) {
 			if(entities[x].size() > size.y) {
 				size.y = entities[x].size();
