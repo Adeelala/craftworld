@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/export.hpp>
 
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Entities::Player, "Player")

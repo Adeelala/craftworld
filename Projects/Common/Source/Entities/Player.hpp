@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <boost/serialization/access.hpp>
-#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "Entity.hpp"
 #include "../Utility/Vector3D.hpp"
@@ -14,7 +14,7 @@ namespace CraftWorld::Entities {
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & boost::serialization::base_object<Entity>(*this);
+				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Entity);
 			}
 			
 		public:

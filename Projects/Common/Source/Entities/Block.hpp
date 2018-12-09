@@ -1,7 +1,7 @@
 #pragma once
 
 #include <boost/serialization/access.hpp>
-#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "Entity.hpp"
 
@@ -12,8 +12,8 @@ namespace CraftWorld::Entities {
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & boost::serialization::base_object<Entity>(*this);
-				archive & type;
+				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Entity);
+				archive & BOOST_SERIALIZATION_NVP(type);
 			}
 			
 		public:

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 namespace CraftWorld::Utility {
 	template<typename Type>
@@ -10,9 +11,9 @@ namespace CraftWorld::Utility {
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & x;
-				archive & y;
-				archive & z;
+				archive & BOOST_SERIALIZATION_NVP(x);
+				archive & BOOST_SERIALIZATION_NVP(y);
+				archive & BOOST_SERIALIZATION_NVP(z);
 			}
 			
 		public:

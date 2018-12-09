@@ -1,24 +1,26 @@
 #pragma once
 
 #include <boost/serialization/access.hpp>
-#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "Grid.hpp"
 #include "Entities/Entity.hpp"
 #include "Utility/Vector3D.hpp"
 
 namespace CraftWorld {
+	using EntityGrid = Grid<Entities::Entity>;
+
 	class Chunk :
-		public Grid<Entities::Entity> {
+		public EntityGrid {
 			friend boost::serialization::access;
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & boost::serialization::base_object<Grid<Entities::Entity>>(*this);
+				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(EntityGrid);
 			}
-			
+
 		public:
-			Chunk();
+			Chunk() = default;
 
 			Chunk(const Utility::Vector3D<int>& blockSize);
 

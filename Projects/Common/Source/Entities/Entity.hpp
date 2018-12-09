@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "../Utility/Vector3D.hpp"
 
@@ -10,7 +11,7 @@ namespace CraftWorld::Entities {
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & velocity;
+				archive & BOOST_SERIALIZATION_NVP(velocity);
 			}
 			
 		public:
@@ -18,7 +19,8 @@ namespace CraftWorld::Entities {
 
 			Entity(Utility::Vector3D<int> velocity = { 0, 0, 0 });
 
-			virtual ~Entity() = default;
+			virtual ~Entity() {
+			}
 	};
 }
 

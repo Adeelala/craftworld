@@ -2,7 +2,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "Client.hpp"
 #include "World.hpp"
@@ -13,11 +14,11 @@ void dataHandler(const std::string& data) {
 	// Create serialization stream
 	std::stringstream stringStream;
 	stringStream << data;
-	boost::archive::text_iarchive archive(stringStream);
+	boost::archive::xml_iarchive archive(stringStream);
 
 	// Deserialize the World
 	World world;
-	archive >> world;
+	archive >> BOOST_SERIALIZATION_NVP(world);
 
 	std::cout << "Deserialized world!" << std::endl;
 }

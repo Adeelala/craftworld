@@ -1,17 +1,17 @@
 #include "World.hpp"
 
 #include <memory>
-#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/export.hpp>
 
 BOOST_CLASS_EXPORT_GUID(CraftWorld::World, "World")
-BOOST_CLASS_EXPORT_GUID(CraftWorld::Grid<CraftWorld::Chunk>, "Grid<Chunk>")
+BOOST_CLASS_EXPORT_GUID(CraftWorld::ChunkGrid, "ChunkGrid")
 
 namespace CraftWorld {
 	World::World() {
 	}
 
-	World::World(const Utility::Vector3D<int>& worldChunkSize, const Utility::Vector3D<int>& chunkBlockSize) : Grid(worldChunkSize) {
+	World::World(const Utility::Vector3D<int>& worldChunkSize, const Utility::Vector3D<int>& chunkBlockSize) : ChunkGrid(worldChunkSize) {
 		// Create some chunks
 		for(int x = 0; x < entities.size(); ++x) {
 			for(int y = 0; y < entities[x].size(); ++y) {

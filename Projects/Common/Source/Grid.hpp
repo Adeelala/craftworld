@@ -15,9 +15,9 @@ namespace CraftWorld {
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & entities;
+				archive & BOOST_SERIALIZATION_NVP(entities);
 			}
-			
+
 		public:
 			std::vector<std::vector<std::vector<std::shared_ptr<Type>>>> entities;
 

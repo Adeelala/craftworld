@@ -1,6 +1,6 @@
 #include "Block.hpp"
 
-#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/export.hpp>
 
 #include "../Utility/Vector3D.hpp"

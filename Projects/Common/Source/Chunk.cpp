@@ -1,31 +1,33 @@
 #include "Chunk.hpp"
 
 #include <memory>
-#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/export.hpp>
 
 #include "Entities/Block.hpp"
+#include "Entities/Player.hpp"
 
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Chunk, "Chunk")
-BOOST_CLASS_EXPORT_GUID(CraftWorld::Grid<CraftWorld::Entities::Entity>, "Grid<Entity>")
+BOOST_CLASS_EXPORT_GUID(CraftWorld::EntityGrid, "EntityGrid")
 
 namespace CraftWorld {
-	Chunk::Chunk() {
-	}
 
-	Chunk::Chunk(const Utility::Vector3D<int>& blockSize) : Grid(blockSize) {
+	Chunk::Chunk(const Utility::Vector3D<int>& blockSize) : EntityGrid(blockSize) {
 		// Fill the chunk with blocks
 		for(int x = 0; x < blockSize.x; ++x) {
 			for(int y = 0; y < blockSize.y; ++y) {
 				for(int z = 0; z < blockSize.z; ++z) {
-					entities[x][y][z] =
-						std::make_shared<Entities::Block>(
+					if(x == blockSize.x / 2 && y == blockSize.y / 2 && z == blockSize.z / 2) {
+						entities[x][y][z] = std::make_shared<Entities::Player>(Entities::Player());
+					} else {
+						entities[x][y][z] = std::make_shared<Entities::Block>(
 							Entities::Block(
 								y < (blockSize.y / 2)
 									? Entities::Block::DIRT
 									: Entities::Block::AIR
 							)
 						);
+					}
 				}
 			}
 		}

@@ -3,7 +3,8 @@
 #include <iostream>
 #include <sstream>
 #include <boost/bind.hpp>
-#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "Server.hpp"
 #include "World.hpp"
@@ -41,8 +42,8 @@ namespace CraftWorld {
 
 		// Serialize World
 		std::stringstream stringStream;
-		boost::archive::text_oarchive archive(stringStream);
-		archive << world;
+		boost::archive::xml_oarchive archive(stringStream);
+		archive << BOOST_SERIALIZATION_NVP(world);
 
 		// Send the message
 		send(stringStream.str());
