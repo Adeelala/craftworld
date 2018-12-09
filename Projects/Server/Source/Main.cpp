@@ -2,7 +2,6 @@
 #include <boost/asio.hpp>
 
 #include "Server.hpp"
-#include "World.hpp"
 
 using namespace CraftWorld;
 

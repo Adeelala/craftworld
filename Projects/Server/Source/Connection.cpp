@@ -21,7 +21,7 @@ namespace CraftWorld {
 		std::cout << "Made a connection!" << std::endl;
 
 		// Create test world
-		World world({ 16, 16, 16 }, { 16, 16, 16 });
+		World world({ 8, 8, 8 }, { 8, 8, 8 });
 
 		// Serialize World
 		std::stringstream stringStream;

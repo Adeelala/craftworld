@@ -1,8 +1,11 @@
 #include "World.hpp"
 
 #include <memory>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/export.hpp>
 
-#include "Entities/Chunk.hpp"
+BOOST_CLASS_EXPORT_GUID(CraftWorld::World, "World")
+BOOST_CLASS_EXPORT_GUID(CraftWorld::Grid<CraftWorld::Chunk>, "Grid<Chunk>")
 
 namespace CraftWorld {
 	World::World() {
@@ -13,7 +16,7 @@ namespace CraftWorld {
 		for(int x = 0; x < entities.size(); ++x) {
 			for(int y = 0; y < entities[x].size(); ++y) {
 				for(int z = 0; z < entities[x][y].size(); ++z) {
-					entities[x][y][z] = std::make_shared<Entities::Chunk>(Entities::Chunk(chunkBlockSize));
+					entities[x][y][z] = std::make_shared<Chunk>(Chunk(chunkBlockSize));
 				}
 			}
 		}
@@ -24,7 +27,7 @@ namespace CraftWorld {
 		for(int x = 0; x < entities.size(); ++x) {
 			for(int y = 0; y < entities[x].size(); ++y) {
 				for(int z = 0; z < entities[x][y].size(); ++z) {
-					std::static_pointer_cast<Entities::Chunk>(entities[x][y][z])->update();
+					std::static_pointer_cast<Chunk>(entities[x][y][z])->update();
 				}
 			}
 		}
@@ -52,5 +55,3 @@ namespace CraftWorld {
 		return result;
 	}
 }
-
-BOOST_CLASS_EXPORT_IMPLEMENT(CraftWorld::World)

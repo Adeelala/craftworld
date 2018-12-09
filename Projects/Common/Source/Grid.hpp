@@ -4,9 +4,7 @@
 #include <vector>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/archive/text_oarchive.hpp>
 
-#include "Entities/Entity.hpp"
 #include "Utility/Vector3D.hpp"
 
 namespace CraftWorld {
@@ -29,13 +27,15 @@ namespace CraftWorld {
 			) {
 			}
 
+			virtual ~Grid() = default;
+
 			/**
 			 * Swaps the entities at the two positions.
 			 * @param first The first position.
 			 * @param second The second position.
 			 */
 			void swap(const Utility::Vector3D<int>& first, const Utility::Vector3D<int>& second) {
-				std::shared_ptr<Entities::Entity> temporary = entities[second.x][second.y][second.z];
+				std::shared_ptr<Type> temporary = entities[second.x][second.y][second.z];
 				entities[second.x][second.y][second.z] = entities[first.x][first.y][first.z];
 				entities[first.x][first.y][first.z] = temporary;
 			}
@@ -46,3 +46,4 @@ namespace CraftWorld {
 			}
 	};
 }
+

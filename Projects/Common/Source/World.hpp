@@ -1,15 +1,15 @@
 #pragma once
 
 #include <vector>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/base_object.hpp>
 
 #include "Grid.hpp"
-#include "Entities/Chunk.hpp"
+#include "Chunk.hpp"
+#include "Utility/Vector3D.hpp"
 
 namespace CraftWorld {
 	class World :
-		public Grid<Entities::Chunk> {
+		public Grid<Chunk> {
 		public:
 			World();
 
@@ -23,9 +23,7 @@ namespace CraftWorld {
 
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Grid<Entities::Chunk>);
+				archive & boost::serialization::base_object<Grid<Chunk>>(*this);
 			}
 	};
 }
-
-BOOST_CLASS_EXPORT_KEY(CraftWorld::World)

@@ -11,15 +11,15 @@ using namespace CraftWorld;
 
 void dataHandler(const std::string& data) {
 	// Create serialization stream
-	std::stringstream stringStream;
-	boost::archive::text_iarchive archive(stringStream);
+	//std::stringstream stringStream;
+	//boost::archive::text_iarchive archive(stringStream);
 
 	// Write input data to the stream
-	stringStream << data;
+	//stringStream << data;
 
 	// Deserialize the World
-	World world;
-	world.serialize(archive, 1);
+	//World world;
+	//world.serialize(archive, 1);
 
 	std::cout << "Deserialized world!";
 }

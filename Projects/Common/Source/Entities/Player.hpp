@@ -2,9 +2,7 @@
 
 #include <memory>
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
 
-#include "Block.hpp"
 #include "Entity.hpp"
 #include "../Utility/Vector3D.hpp"
 
@@ -20,5 +18,3 @@ namespace CraftWorld::Entities {
 			}
 	};
 }
-
-BOOST_CLASS_EXPORT_KEY(CraftWorld::Entities::Player)

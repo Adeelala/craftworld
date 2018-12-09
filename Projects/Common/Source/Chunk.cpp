@@ -1,24 +1,29 @@
 #include "Chunk.hpp"
 
 #include <memory>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/export.hpp>
 
-#include "Block.hpp"
+#include "Entities/Block.hpp"
 
-namespace CraftWorld::Entities {
-	Chunk::Chunk() : Entity(Utility::Vector3D<int> { 0, 0, 0 }) {
+BOOST_CLASS_EXPORT_GUID(CraftWorld::Chunk, "Chunk")
+BOOST_CLASS_EXPORT_GUID(CraftWorld::Grid<CraftWorld::Entities::Entity>, "Grid<Entity>")
+
+namespace CraftWorld {
+	Chunk::Chunk() {
 	}
 
-	Chunk::Chunk(const Utility::Vector3D<int>& blockSize) : Entity(Utility::Vector3D<int> { 0, 0, 0 }), Grid(blockSize) {
+	Chunk::Chunk(const Utility::Vector3D<int>& blockSize) : Grid(blockSize) {
 		// Fill the chunk with blocks
 		for(int x = 0; x < blockSize.x; ++x) {
 			for(int y = 0; y < blockSize.y; ++y) {
 				for(int z = 0; z < blockSize.z; ++z) {
 					entities[x][y][z] =
-						std::make_shared<Block>(
-							Block(
+						std::make_shared<Entities::Block>(
+							Entities::Block(
 								y < (blockSize.y / 2)
-									? Block::DIRT
-									: Block::AIR
+									? Entities::Block::DIRT
+									: Entities::Block::AIR
 							)
 						);
 				}
@@ -48,8 +53,8 @@ namespace CraftWorld::Entities {
 				for(int z = 0; z < entities[x][y].size(); ++z) {
 					// Check if the entity is a block and if the block is air
 					if(
-						auto pointer = dynamic_cast<Block*>(entities[x][y][z].get());
-						pointer != nullptr && pointer->type != Block::AIR
+						auto pointer = dynamic_cast<Entities::Block*>(entities[x][y][z].get());
+						pointer != nullptr && pointer->type != Entities::Block::AIR
 						) {
 						return false;
 					}
@@ -60,5 +65,3 @@ namespace CraftWorld::Entities {
 		return true;
 	}
 }
-
-BOOST_CLASS_EXPORT_IMPLEMENT(CraftWorld::Entities::Chunk)
