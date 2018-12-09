@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <boost/serialization/access.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
@@ -10,6 +11,13 @@
 namespace CraftWorld {
 	template<typename Type>
 	class Grid {
+			friend boost::serialization::access;
+
+			template<typename ArchiveType>
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				archive & entities;
+			}
+			
 		public:
 			std::vector<std::vector<std::vector<std::shared_ptr<Type>>>> entities;
 
@@ -27,8 +35,6 @@ namespace CraftWorld {
 			) {
 			}
 
-			virtual ~Grid() = default;
-
 			/**
 			 * Swaps the entities at the two positions.
 			 * @param first The first position.
@@ -38,11 +44,6 @@ namespace CraftWorld {
 				std::shared_ptr<Type> temporary = entities[second.x][second.y][second.z];
 				entities[second.x][second.y][second.z] = entities[first.x][first.y][first.z];
 				entities[first.x][first.y][first.z] = temporary;
-			}
-
-			template<typename ArchiveType>
-			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & entities;
 			}
 	};
 }

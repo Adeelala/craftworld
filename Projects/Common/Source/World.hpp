@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
 
 #include "Grid.hpp"
@@ -10,6 +11,13 @@
 namespace CraftWorld {
 	class World :
 		public Grid<Chunk> {
+			friend boost::serialization::access;
+
+			template<typename ArchiveType>
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				archive & boost::serialization::base_object<Grid<Chunk>>(*this);
+			}
+
 		public:
 			World();
 
@@ -20,10 +28,5 @@ namespace CraftWorld {
 			Utility::Vector3D<int> getChunkSize();
 
 			std::vector<std::vector<char>> createMap();
-
-			template<typename ArchiveType>
-			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & boost::serialization::base_object<Grid<Chunk>>(*this);
-			}
 	};
 }

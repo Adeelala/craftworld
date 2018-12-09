@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
 
 #include "Grid.hpp"
@@ -9,6 +10,13 @@
 namespace CraftWorld {
 	class Chunk :
 		public Grid<Entities::Entity> {
+			friend boost::serialization::access;
+
+			template<typename ArchiveType>
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				archive & boost::serialization::base_object<Grid<Entities::Entity>>(*this);
+			}
+			
 		public:
 			Chunk();
 
@@ -21,10 +29,5 @@ namespace CraftWorld {
 			 * @return Whether the Chunk is empty.
 			 */
 			bool isEmpty() const;
-
-			template<typename ArchiveType>
-			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & boost::serialization::base_object<Grid<Entities::Entity>>(*this);
-			}
 	};
 }

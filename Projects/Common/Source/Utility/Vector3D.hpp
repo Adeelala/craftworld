@@ -1,10 +1,20 @@
 #pragma once
 
 #include <vector>
+#include <boost/serialization/access.hpp>
 
 namespace CraftWorld::Utility {
 	template<typename Type>
 	class Vector3D {
+			friend boost::serialization::access;
+
+			template<typename ArchiveType>
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				archive & x;
+				archive & y;
+				archive & z;
+			}
+			
 		public:
 			Type x;
 
@@ -40,13 +50,6 @@ namespace CraftWorld::Utility {
 				z *= right.z;
 
 				return *this;
-			}
-
-			template<typename ArchiveType>
-			void serialize(ArchiveType& archive, const unsigned int& version) {
-				archive & x;
-				archive & y;
-				archive & z;
 			}
 
 			friend bool operator ==(const Vector3D& left, const Vector3D& right) {

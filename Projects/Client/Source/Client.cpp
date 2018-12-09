@@ -1,5 +1,6 @@
 #include "Client.hpp"
 
+#include <iterator>
 #include <iostream>
 
 namespace CraftWorld {
@@ -32,9 +33,10 @@ namespace CraftWorld {
 		// Keep looping to receive data
 		while(true) {
 			// Receive data
-			std::array<char, 128> buffer;
+			std::string data;
 			boost::system::error_code errorCode;
-			size_t length = socket.read_some(boost::asio::buffer(buffer), errorCode);
+			size_t length = boost::asio::read_until(socket, boost::asio::dynamic_buffer(data), "\n\n", errorCode);
+			data = data.substr(0, length - 2);
 
 			// Check if data was received
 			if(errorCode == boost::asio::error::eof) {
@@ -45,10 +47,8 @@ namespace CraftWorld {
 				throw boost::system::system_error(errorCode);
 			}
 
-			std::string data(buffer.data(), length);
-
 			// Handle data
-			std::cout << "Received data: " << data;
+			std::cout << "Received data: " << std::endl << data << std::endl;
 			dataHandler(data);
 		}
 	}
