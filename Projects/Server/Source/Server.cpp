@@ -2,26 +2,30 @@
 
 #include <boost/bind.hpp>
 
+#include "Connection.hpp"
+
 namespace CraftWorld {
-	Server::Server(boost::asio::io_context& io_context) : acceptor_(io_context, tcp::endpoint(tcp::v4(), 8000)) {
-		start_accept();
+	Server::Server() : acceptor_(ioContext_, tcp::endpoint(tcp::v4(), 8000)) {
+		ioContext_.run();
 	}
 
-	void Server::start_accept() {
-		Connection::pointer new_connection = Connection::create(acceptor_.get_executor().context());
+	void Server::run() {
+		std::shared_ptr<Connection> connection = std::make_shared<Connection>(new Connection(*this));
+
 		acceptor_.async_accept(
-			new_connection->socket(), boost::bind(
-				&Server::handle_accept, this, new_connection,
+			connection->socket_, boost::bind(
+				// Create a new lambda which asynchronously handles the client request and calls run again to start accepting new connections
+				[&](const std::shared_ptr<Connection>& connection, const boost::system::error_code& error) {
+					if(!error) {
+						connection->start();
+					}
+
+					run();
+				},
+				this,
+				connection,
 				boost::asio::placeholders::error
 			)
 		);
-	}
-
-	void Server::handle_accept(Connection::pointer new_connection, const boost::system::error_code& error) {
-		if(!error) {
-			new_connection->start();
-		}
-
-		start_accept();
 	}
 }

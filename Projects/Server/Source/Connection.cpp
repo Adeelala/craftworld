@@ -3,18 +3,30 @@
 #include <iostream>
 #include <sstream>
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/archive/text_oarchive.hpp>
 
+#include "Server.hpp"
 #include "World.hpp"
 
 namespace CraftWorld {
-	boost::shared_ptr<Connection> Connection::create(boost::asio::io_context& io_context) {
-		return pointer(new Connection(io_context));
+	Connection::Connection(Server& server) : socket_(server.ioContext_) {
 	}
 
-	tcp::socket& Connection::socket() {
-		return socket_;
+	void Connection::handleWrite(const boost::system::error_code& error, size_t bytes_transferred) {
+	}
+
+	void Connection::send(const std::string& message) const {
+		// Send message
+		boost::asio::async_write(
+			socket_,
+			boost::asio::buffer(message),
+			boost::bind(
+				&Connection::handleWrite,
+				shared_from_this(),
+				boost::asio::placeholders::error,
+				boost::asio::placeholders::bytes_transferred
+			)
+		);
 	}
 
 	void Connection::start() {
@@ -28,23 +40,7 @@ namespace CraftWorld {
 		boost::archive::text_oarchive archive(stringStream);
 		world.serialize(archive, 1);
 
-		// Set message
-		message_ = stringStream.str();
-
-		// Send message
-		boost::asio::async_write(
-			socket_, boost::asio::buffer(message_), boost::bind(
-				&Connection::handle_write,
-				shared_from_this(),
-				boost::asio::placeholders::error,
-				boost::asio::placeholders::bytes_transferred
-			)
-		);
-	}
-
-	Connection::Connection(boost::asio::io_context& io_context) : socket_(io_context) {
-	}
-
-	void Connection::handle_write(const boost::system::error_code& error, size_t bytes_transferred) {
+		// Send the message
+		send(stringStream.str());
 	}
 }
