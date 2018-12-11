@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace CraftWorld {
-	Client::Client(const std::string& host, const int& port) : socket(
+	Client::Client(const std::string& host, const int& port) : socket_(
 		[&]() {
 			// Initialize IO context
 			boost::asio::io_context ioContext;
@@ -35,7 +35,7 @@ namespace CraftWorld {
 			// Receive data
 			std::string data;
 			boost::system::error_code errorCode;
-			size_t length = boost::asio::read_until(socket, boost::asio::dynamic_buffer(data), "\n\n", errorCode);
+			size_t length = boost::asio::read_until(socket_, boost::asio::dynamic_buffer(data), "\n\n", errorCode);
 			data = data.substr(0, length - 2);
 
 			// Check if data was received

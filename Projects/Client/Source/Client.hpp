@@ -14,7 +14,7 @@ namespace CraftWorld {
 			/**
 			 * The socket used to transmit data.
 			 */
-			tcp::socket socket;
+			tcp::socket socket_;
 
 		public:
 			/**
