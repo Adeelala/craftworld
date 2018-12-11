@@ -10,6 +10,10 @@
 
 using namespace CraftWorld;
 
+/**
+ * Handles incomming data.
+ * @param data The data.
+ */
 void dataHandler(const std::string& data) {
 	// Create serialization stream
 	std::stringstream stringStream;
