@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <boost/bind.hpp>
-#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/nvp.hpp>
 
 #include "Server.hpp"
@@ -38,11 +38,11 @@ namespace CraftWorld {
 		std::cout << "Made a connection!" << std::endl;
 
 		// Create test world
-		World world({ 1, 1, 1 }, { 1, 1, 1 });
+		World world({ 4, 4, 4 }, { 4, 4, 4 });
 
 		// Serialize World
 		std::stringstream stringStream;
-		boost::archive::xml_oarchive archive(stringStream);
+		boost::archive::text_oarchive archive(stringStream);
 		archive << BOOST_SERIALIZATION_NVP(world);
 
 		// Send the message

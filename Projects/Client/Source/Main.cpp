@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/nvp.hpp>
 
 #include "Client.hpp"
@@ -18,7 +18,7 @@ void dataHandler(const std::string& data) {
 	// Create serialization stream
 	std::stringstream stringStream;
 	stringStream << data;
-	boost::archive::xml_iarchive archive(stringStream);
+	boost::archive::text_iarchive archive(stringStream);
 
 	// Deserialize the World
 	World world;
