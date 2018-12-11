@@ -33,7 +33,7 @@ namespace CraftWorld {
 
 			/**
 			 * Starts the Server.
-			 * Create a socket and initiate an asynchronous accept operation that waits for new connections.
+			 * Create a socket and initiate an asynchronous accept operation that waits for new Connections.
 			 */
 			void run();
 	};
