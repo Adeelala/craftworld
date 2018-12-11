@@ -13,7 +13,7 @@ namespace CraftWorld {
 	Connection::Connection(Server& server) : socket_(server.acceptor_.get_executor().context()) {
 	}
 
-	void Connection::handleWrite(const boost::system::error_code& error, size_t bytes_transferred) {
+	void Connection::handleWrite(const boost::system::error_code& error, size_t bytesTransferred) {
 	}
 
 	void Connection::send(const std::string& message) {

@@ -8,15 +8,26 @@ using boost::asio::ip::tcp;
 namespace CraftWorld {
 	class Connection;
 
+	/**
+	 * Exchanges data with any connected Clients.
+	 */
 	class Server {
 			friend Connection;
 
+			/**
+			 * The IO context to use.
+			 */
 			boost::asio::io_context ioContext_;
 
+			/**
+			 * The acceptor to use.
+			 */
 			tcp::acceptor acceptor_;
 
 		public:
-			// The server will listen on the specified port
+			/**
+			 * Creates a new Server.
+			 */
 			Server();
 
 			/**
