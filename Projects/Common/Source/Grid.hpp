@@ -13,14 +13,27 @@ namespace CraftWorld {
 	class Grid {
 			friend boost::serialization::access;
 
+			/**
+			 * Serializes the Chunk.
+			 * @tparam ArchiveType The type of archive used for serialization.
+			 * @param archive The archive used for serialization.
+			 * @param version The version of the serialization algorithm.
+			 */
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
 				archive & BOOST_SERIALIZATION_NVP(entities);
 			}
 
 		public:
+			/**
+			 * The entities contained within the Grid.
+			 */
 			std::vector<std::vector<std::vector<std::shared_ptr<Type>>>> entities;
 
+			/**
+			 * Creates a new Grid.
+			 * @param size The amount of entities the Grid should be able to contain on each axis.
+			 */
 			Grid(const Utility::Vector3D<int>& size = { 0, 0, 0 }) : entities(
 				std::vector<std::vector<std::vector<std::shared_ptr<Type>>>>(
 					size.x,
