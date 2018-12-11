@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Add common library target
-file(GLOB_RECURSE SOURCES Source/*.cpp)
+file(GLOB_RECURSE SOURCES Source/*.cpp Source/*.hpp)
 add_library(Craftworld-Common
 	${SOURCES}
 	)

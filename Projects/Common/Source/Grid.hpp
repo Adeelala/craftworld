@@ -1,55 +1,50 @@
 #pragma once
 
-#include <map>
 #include <memory>
 #include <vector>
-#include <utility>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 #include "Utility/Vector3D.hpp"
 
 namespace CraftWorld {
-	template<typename ItemType, typename PositionValueType>
+	template<typename Type>
 	class Grid {
-			using PositionType = Utility::Vector3D<PositionValueType>;
+			friend boost::serialization::access;
 
-			std::vector<ItemType> items_;
-
-			std::map<std::shared_ptr<ItemType>, PositionType> itemPositions_;
+			template<typename ArchiveType>
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				archive & BOOST_SERIALIZATION_NVP(entities);
+			}
 
 		public:
-			typename std::vector<ItemType>::iterator begin();
+			std::vector<std::vector<std::vector<std::shared_ptr<Type>>>> entities;
 
-			typename std::vector<ItemType>::const_iterator begin() const;
-
-			typename std::vector<ItemType>::iterator end();
-
-			typename std::vector<ItemType>::const_iterator end() const;
-
-			/**
-			 * Gets the items at the specified position.
-			 * @param position The position to retrieve.
-			 * @return The items.
-			 */
-			std::vector<ItemType> get(const PositionType& position) const;
-
-			/**
-			 * Gets all items in this grid.
-			 * @return All items.
-			 */
-			std::vector<ItemType> getAll() const;
+			Grid(const Utility::Vector3D<int>& size = { 0, 0, 0 }) : entities(
+				std::vector<std::vector<std::vector<std::shared_ptr<Type>>>>(
+					size.x,
+					std::vector<std::vector<std::shared_ptr<Type>>>(
+						size.y,
+						std::vector<std::shared_ptr<Type>>(
+							size.z,
+							std::shared_ptr<Type>()
+						)
+					)
+				)
+			) {
+			}
 
 			/**
-			 * Places a new item at the specified position.
-			 * @param item The item to place.
-			 * @param position The position to place the item.
+			 * Swaps the entities at the two positions.
+			 * @param first The first position.
+			 * @param second The second position.
 			 */
-			void place(const ItemType& item, const PositionType& position);
-
-			/**
-			 * Moves all items from the specified old position to a new position.
-			 * @param oldPosition The old position.
-			 * @param newPosition The new position.
-			 */
-			void move(const PositionType& oldPosition, const PositionType& newPosition);
+			void swap(const Utility::Vector3D<int>& first, const Utility::Vector3D<int>& second) {
+				std::shared_ptr<Type> temporary = entities[second.x][second.y][second.z];
+				entities[second.x][second.y][second.z] = entities[first.x][first.y][first.z];
+				entities[first.x][first.y][first.z] = temporary;
+			}
 	};
 }
+

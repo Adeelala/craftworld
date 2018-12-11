@@ -12,7 +12,7 @@ include_directories(../Common/Source)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Add client target
-file(GLOB_RECURSE SOURCES Source/*.cpp)
+file(GLOB_RECURSE SOURCES Source/*.cpp Source/*.hpp)
 add_executable(Craftworld-Client
 	${SOURCES}
 	)

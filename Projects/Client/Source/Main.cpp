@@ -1,51 +1,36 @@
 #include <array>
 #include <string>
-#include <boost/asio.hpp>
+#include <sstream>
 #include <iostream>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/serialization/nvp.hpp>
 
-using boost::asio::ip::tcp;
+#include "Client.hpp"
+#include "World.hpp"
 
-std::string receiveData(tcp::socket& socket) {
-	// Receive data
-	std::array<char, 128> buffer;
-	boost::system::error_code errorCode;
-	size_t length = socket.read_some(boost::asio::buffer(buffer), errorCode);
+using namespace CraftWorld;
 
-	// Check if data was received
-	if(errorCode == boost::asio::error::eof) {
-		// The connection was closed, so exit
-		exit(0);
-	} else if(errorCode) {
-		// An error occurred
-		throw boost::system::system_error(errorCode);
-	}
+void dataHandler(const std::string& data) {
+	// Create serialization stream
+	std::stringstream stringStream;
+	stringStream << data;
+	boost::archive::xml_iarchive archive(stringStream);
 
-	// Return data
-	return std::string(buffer.data(), length);
+	// Deserialize the World
+	World world;
+	archive >> BOOST_SERIALIZATION_NVP(world);
+
+	std::cout << "Deserialized world!" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
-	std::cout << "Starting client...";
+	std::cout << "Starting client..." << std::endl;
 
-	// Initialize Boost Asio context
-	boost::asio::io_context ioContext;
+	// Create new Client
+	Client client("localhost", 8000);
 
-	// Resolve server endpoint
-	tcp::resolver::results_type endpoints = tcp::resolver(ioContext).resolve("localhost", "8000");
-
-	// Create new socket
-	tcp::socket socket(ioContext);
-
-	// Establish a connection
-	boost::asio::connect(socket, endpoints);
-
-	// Keep looping to receive data
-	while(true) {
-		std::string data = receiveData(socket);
-
-		// If we're here, print the data
-		std::cout << data;
-	}
+	// Run the Client
+	client.run(dataHandler);
 
 	return 0;
 }

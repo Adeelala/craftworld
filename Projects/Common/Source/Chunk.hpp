@@ -1,17 +1,35 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include "Grid.hpp"
-#include "Entity.hpp"
+#include "Entities/Entity.hpp"
+#include "Utility/Vector3D.hpp"
 
 namespace CraftWorld {
+	using EntityGrid = Grid<Entities::Entity>;
+
 	class Chunk :
-		public Grid<Entity, int> {
+		public EntityGrid {
+			friend boost::serialization::access;
+
+			template<typename ArchiveType>
+			void serialize(ArchiveType& archive, const unsigned int& version) {
+				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(EntityGrid);
+			}
+
 		public:
+			Chunk() = default;
+
+			Chunk(const Utility::Vector3D<int>& blockSize);
+
 			void update();
 
-			std::string getHash() const;
+			/**
+			 * Checks if the Chunk contains only air blocks.
+			 * @return Whether the Chunk is empty.
+			 */
+			bool isEmpty() const;
 	};
 }
