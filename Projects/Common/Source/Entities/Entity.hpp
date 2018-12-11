@@ -36,9 +36,10 @@ namespace CraftWorld::Entities {
 			Entity(Utility::Vector3D<int> velocity = { 0, 0, 0 });
 
 			/**
-			 * Declares the class as abstract.
+			 * Declares the class as polymorphic.
 			 */
-			virtual ~Entity() = 0;
+			virtual ~Entity() {
+			};
 	};
 }
 
