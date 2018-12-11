@@ -38,8 +38,7 @@ namespace CraftWorld::Entities {
 			/**
 			 * Declares the class as polymorphic.
 			 */
-			virtual ~Entity() {
-			};
+			virtual ~Entity() = default;
 	};
 }
 
