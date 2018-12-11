@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
 
 	try {
 		// Create the server object that is going to accept connections
-		Server server;
+		Server server(8000);
 
 		// Run the IO context so that it will perform asynchronous operations
 		server.run();

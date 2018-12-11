@@ -27,8 +27,9 @@ namespace CraftWorld {
 		public:
 			/**
 			 * Creates a new Server.
+			 * @param port The port to listen on for new Connections.
 			 */
-			Server();
+			Server(const int& port);
 
 			/**
 			 * Starts the Server.

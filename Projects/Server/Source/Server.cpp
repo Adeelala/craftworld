@@ -3,7 +3,7 @@
 #include "Connection.hpp"
 
 namespace CraftWorld {
-	Server::Server() : acceptor_(ioContext_, tcp::endpoint(tcp::v4(), 8000)) {
+	Server::Server(const int& port) : acceptor_(ioContext_, tcp::endpoint(tcp::v4(), port)) {
 	}
 
 	void Server::run() {
