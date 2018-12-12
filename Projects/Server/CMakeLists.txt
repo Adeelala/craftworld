@@ -2,7 +2,7 @@
 set(BOOST_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries/boost")
 
 # Find Boost
-find_package(Boost REQUIRED COMPONENTS serialization)
+find_package(Boost REQUIRED COMPONENTS serialization mpi)
 
 # Set Boost linker flags
 set(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
@@ -18,5 +18,4 @@ add_executable(Craftworld-Server
 	)
 
 # Link the common library and Boost
-target_link_libraries(Craftworld-Server Craftworld-Common)
-target_link_libraries(Craftworld-Server ${Boost_LIBRARIES})
+target_link_libraries(Craftworld-Server Craftworld-Common ${Boost_LIBRARIES})
