@@ -6,7 +6,7 @@
 
 namespace CraftWorld {
 	Server::Server(const int& port) : acceptor_(ioContext_, tcp::endpoint(tcp::v4(), port)) {
-		std::cout << "Server with rank " << world_.rank() << " out of " << world_.size() << " initialized and listening on port " << port << std::endl;
+		std::cout << "Server with rank " << world_.rank() << " (total server count: " << world_.size() << ") initialized and listening on port " << port << std::endl;
 	}
 
 	void Server::run() {

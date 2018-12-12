@@ -1,8 +1,10 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/mpi/environment.hpp>
+#include <boost/mpi/communicator.hpp>
 
-#include "Server.hpp"
+#include "Matchmaker.hpp"
+#include "Slave.hpp"
 
 using namespace CraftWorld;
 
@@ -12,12 +14,24 @@ int main(int argc, char* argv[]) {
 	// Initialize the MPI environment
 	boost::mpi::environment environment(argc, argv);
 
-	try {
-		// Create the server object that is going to accept connections
-		Server server(8000);
+	// Get MPI world
+	boost::mpi::communicator world;
 
-		// Run the IO context so that it will perform asynchronous operations
-		server.run();
+	try {
+		// Set up servers
+		if(world.rank() == 0) {
+			// Set up the matchmaker
+			Matchmaker server(8000);
+
+			// Run the matchmaker
+			server.run();
+		} else {
+			// Set up a new slave
+			Slave server(8000);
+
+			// Run the slave
+			server.run();
+		}
 	} catch(std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}

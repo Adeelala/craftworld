@@ -15,6 +15,7 @@ namespace CraftWorld {
 	class Server {
 			friend Connection;
 
+		protected:
 			/**
 			 * The IO context to use.
 			 */
@@ -24,7 +25,7 @@ namespace CraftWorld {
 			 * The acceptor to use.
 			 */
 			tcp::acceptor acceptor_;
-			
+
 			/**
 			 * The communicator which allows communication with other MPI processes.
 			 */
@@ -35,12 +36,17 @@ namespace CraftWorld {
 			 * Creates a new Server.
 			 * @param port The port to listen on for new Connections.
 			 */
-			Server(const int& port);
+			explicit Server(const int& port);
 
 			/**
 			 * Starts the Server.
 			 * Create a socket and initiate an asynchronous accept operation that waits for new Connections.
 			 */
 			void run();
+
+			/**
+			 * Makes the class polymorphic.
+			 */
+			~Server() = default;
 	};
 }
