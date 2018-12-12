@@ -19,7 +19,7 @@ This will create a `project-config.jam` file in the current folder. Open this fi
 using mpi ;
 ```
 
-You will also need to have an MPI implementation installed on the system that will compile and run the server. OpenMPI is a good implementation and can be found here: `https://www.open-mpi.org/`
+You will also need to have an MPI implementation installed on the system that will compile and run the server. OpenMPI is a good implementation and can be found here: `https://www.open-mpi.org/`. Instructions on how to install OpenMPI are available here: `https://www.open-mpi.org/faq/?category=building#easy-build`.
 
 Once that is done, run the following command to build Boost and install the necessary files:
 
