@@ -2,8 +2,10 @@
 //https://www.codeguru.com/cpp/cpp/cpp_mfc/stl/article.php/c4027/C-Tutorial-A-Beginners-Guide-to-stdvector-Part-1.htm
 #include <iostream>
 #include <vector>
+#include "Utility/Vector3D.hpp"
 
-typedef std::vector<int> int_vec_t;
+typedef std::vector<std::vector<std::vector<int> > >  int_vec_t;
+typedef CraftWorld::Utility::Vector3D<int> player_coord;
 
 /*
 These functions will check if you can move in a certain direction.
@@ -27,7 +29,7 @@ and player_other = 3
 */
 
 
-int_vec_t moveNorth(int_vec_t map, int_vec_t player){
+int_vec_t moveNorth(int_vec_t map, player_coord player){
 	/*When accessing the 3d vector it might be easier to use it as
 	a single contiguous array*/
 	int map_vector_dimension_size = map.size() / 3;
@@ -46,9 +48,9 @@ int_vec_t moveNorth(int_vec_t map, int_vec_t player){
 	/*The player vector should only contain an x,y,z coordinate of the bottom half.
 	Which we will have to use for the calculations.
 	*/
-	int player_x = player[0];
-	int player_y = player[1];
-	int player_z = player[2];
+	// int player_x = player[0];
+	// int player_y = player[1];
+	// int player_z = player[2];
 
 	/*Now that we have all the necessary data, we can start moving the character*/
 
@@ -71,18 +73,18 @@ int_vec_t moveNorth(int_vec_t map, int_vec_t player){
 		is a dirk block*/
 		//if(map[(map_y_loc_end + 1) + player_z] == 0 && map[(map_y_loc_end + 1) + player_z] == 0){
 
-		else if(map[player_x][player_y][player_z + 1] == 0 && map[player_x][player_y + 1][player_z + 1]){
+		else if(map[player.x][player.y][player.z + 1] == 0 && map[player_x][player.y + 1][player.z + 1]){
 			/*Old position gets filled with air*/
-			map[player_x][player_y][player_z] = 1;
-			map[player_x][player_y][player_z] = 1;
+			map[player.x][player.y][player.z] = 1;
+			map[player.x][player.y][player.z] = 1;
 
 			/*New position gets filled with player*/
-			map[player_x][player_y][player_z + 1] = 2;
-			map[player_x][player_y + 1][player_z + 1] = 2;
+			map[player.x][player.y][player.z + 1] = 2;
+			map[player.x][player.y + 1][player.z + 1] = 2;
 
-			player[0] = player_x;
-			player[1] = player_y;
-			player[2] = player_z + 1;
+			// player[0] = player_x;
+			// player[1] = player_y;
+			// player[2] = player_z + 1;
 
 		}
 		else{
