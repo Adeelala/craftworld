@@ -35,7 +35,7 @@ To run the server, you will need to add an environment variable to the run confi
 Then, add a new entry with `LD_LIBRARY_PATH` as name and `/usr/local/lib` as value (if you installed the MPI library somewhere else, use that location as the value).
 
 Once you have added the variable, open up a terminal and navigate to the folder where the server's build files are located.
-Usually this is at `{project-root}/cmake-build-debug/Projects/Server`. This folder should contain the server executable, with the name `CraftWorld-Server`.
+Usually this is at `{projectRoot}/cmake-build-debug/Projects/Server`. This folder should contain the server executable, with the name `CraftWorld-Server`.
 
 To run the executable, use the following command:
 
