@@ -27,6 +27,9 @@ Once that is done, run the following command to build Boost and install the nece
 
 You can then proceed to open the project in CLion. To do this select open and then select the craftworld folder. To be able to build the project you need CMake and a toolchain (MinGW is preferred if you use windows).
 
+To run the server, you will need to add an environment variable to the run configuration so that the MPI libraries can be found. To do so, in cLion, go to `Run -> Edit configurations... -> CraftWorld-Server` and click the icon at the right of `Environment variables`.
+Then, add a new entry with `LD_LIBRARY_PATH` as name and `/usr/local/lib` as value.
+
 # Connecting to the DAS-4
 
 To connect to the DAS-4, first ssh into the VU proxy using this command:
