@@ -1,24 +1,19 @@
 #include <iostream>
 #include <boost/asio.hpp>
 
-#include "World.hpp"
+#include "Server.hpp"
 
-using boost::asio::ip::tcp;
+using namespace CraftWorld;
 
 int main(int argc, char* argv[]) {
-	std::cout << "Starting server..." << std::flush;
-
-	CraftWorld::World world;
-
-	boost::asio::io_service ioService;
+	std::cout << "Starting server..." << std::endl;
 
 	try {
-		tcp::acceptor acceptor(ioService, tcp::endpoint(tcp::v4(), 8000));
-		tcp::socket socket(ioService);
-		acceptor.accept(socket);
-		std::string message = "Hello world!";
-		boost::system::error_code ignored_error;
-		boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
+		// Create the server object that is going to accept connections
+		Server server(8000);
+
+		// Run the IO context so that it will perform asynchronous operations
+		server.run();
 	} catch(std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}
