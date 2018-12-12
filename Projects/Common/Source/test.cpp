@@ -5,13 +5,10 @@
 #include "Utility/Vector3D.hpp"
 
 typedef std::vector<std::vector<std::vector<int> > >  int_vec_t;
-typedef CraftWorld::Utility::Vector3D<int> player_coord;
+typedef Utility::Vector3D<int> player_coord;
 
 /*
 These functions will check if you can move in a certain direction.
-These functions will return either true or false. The function that calls these
-functions will have to send the current coordinates of the player and what the next block
-is in that specific direction.
 
 North = z-axis + 1
 South = z-axis - 1
@@ -23,9 +20,6 @@ dirt = 0
 air = 1
 player_self = 2
 and player_other = 3
-
-
-
 */
 
 
@@ -39,18 +33,12 @@ int_vec_t moveNorth(int_vec_t map, player_coord player){
 	are placed in the vector.*/
 
 	/* the x-values are located between 0 and map_vector_dimension_size(mvds) - 1 */
-	//int map_x_loc_end = map_vector_dimension_size - 1;
 	/* the y-values are located between mvds and (mvds * 2) - 1 */
-	//int map_y_loc_end = (map_vector_dimension_size * 2) - 1;
 	/* the z-values are located between mvds * 2 and (mvds * 3) - 1 */
-	//int map_z_loc_end = (map_vector_dimension_size * 3) - 1;
 
 	/*The player vector should only contain an x,y,z coordinate of the bottom half.
 	Which we will have to use for the calculations.
 	*/
-	// int player_x = player[0];
-	// int player_y = player[1];
-	// int player_z = player[2];
 
 	/*Now that we have all the necessary data, we can start moving the character*/
 
@@ -61,7 +49,7 @@ int_vec_t moveNorth(int_vec_t map, player_coord player){
 	else{
 		/*Check if the players upper body will stay in the map*/
 		if(player_y + 1 > map_vector_dimension_size - 1){
-			/*!!Need to discuss what needs to be returned if the player cannot move*/
+			/*If the player cannot be moved just return the map and player as is*/
 			return map, player;
 
 		}
@@ -82,13 +70,13 @@ int_vec_t moveNorth(int_vec_t map, player_coord player){
 			map[player.x][player.y][player.z + 1] = 2;
 			map[player.x][player.y + 1][player.z + 1] = 2;
 
-			// player[0] = player_x;
-			// player[1] = player_y;
-			// player[2] = player_z + 1;
+			player_x = player.x;
+			player_y = player.y;
+			player_z = player.z + 1;
 
 		}
 		else{
-			/*!!Need to discuss what needs to be returned if the player cannot move*/
+			/*If the player cannot be moved just return the map and player as is*/
 			return map, player;
 		}	
 
