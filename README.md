@@ -6,11 +6,22 @@ First we need to get Boost up and running. To do so, after cloning this reposito
 git submodule update --init --recursive
 ```
 
-This will download the Boost libraries from the official git repository. Next, execute the following commands to build and install Boost:
+This will download the Boost libraries from the official git repository. Next, execute the following commands to prepare Boost for installation:
 
 ```bash
 cd ./Libraries/boost
 ./bootstrap.sh --prefix=./
+```
+
+This will create a `project-config.jam` file in the current folder. Open this file in any text editor, and add the following line to the bottom:
+
+```
+using mpi ;
+```
+
+Once that is done, run the following command to build Boost and install the necessary files:
+
+```bash
 ./b2 install
 ```
 
