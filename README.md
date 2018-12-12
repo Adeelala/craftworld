@@ -19,6 +19,8 @@ This will create a `project-config.jam` file in the current folder. Open this fi
 using mpi ;
 ```
 
+You will also need to have an MPI implementation installed in the folder listed above. OpenMPI is a good implementation and can be found here: `https://www.open-mpi.org/`
+
 Once that is done, run the following command to build Boost and install the necessary files:
 
 ```bash
@@ -27,10 +29,22 @@ Once that is done, run the following command to build Boost and install the nece
 
 You can then proceed to open the project in CLion. To do this select open and then select the craftworld folder. To be able to build the project you need CMake and a toolchain (MinGW is preferred if you use windows).
 
+# Running the server
+
 To run the server, you will need to add an environment variable to the run configuration so that the MPI libraries can be found. To do so, in CLion, go to `Run -> Edit configurations... -> CraftWorld-Server` and click the icon at the right of `Environment variables`.
 Then, add a new entry with `LD_LIBRARY_PATH` as name and `/usr/local/lib` as value.
 
-You will also need to have an MPI implementation installed in the folder listed above. OpenMPI is a good implementation and can be found here: `https://www.open-mpi.org/`
+Once you have added the variable, open up a terminal and navigate to the folder where the server's build files are located.
+Usually this is at `{project-root}/cmake-build-debug/Projects/Server`. This folder should contain the server executable, with the name `CraftWorld-Server`.
+
+To run the executable, use the following command:
+
+```bash
+mpirun --oversubscribe -n {nodeCount} ./CraftWorld-Server
+```
+
+Replace `{nodeCount}` with the amount of server nodes you want to run. One of these will be the matchmaker and the others will be the slaves.
+The `--oversubscribe` flag is necessary if the system has fewer processing units than the amount of nodes you want to use.
 
 # Connecting to the DAS-4
 
