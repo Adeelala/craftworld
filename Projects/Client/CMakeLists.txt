@@ -13,10 +13,10 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 # Add client target
 file(GLOB_RECURSE SOURCES Source/*.cpp Source/*.hpp)
-add_executable(Craftworld-Client
+add_executable(CraftWorld-Client
 	${SOURCES}
 	)
 
 # Link the common library and Boost
-target_link_libraries(Craftworld-Client Craftworld-Common)
-target_link_libraries(Craftworld-Client ${Boost_LIBRARIES})
+target_link_libraries(CraftWorld-Client CraftWorld-Common)
+target_link_libraries(CraftWorld-Client ${Boost_LIBRARIES})

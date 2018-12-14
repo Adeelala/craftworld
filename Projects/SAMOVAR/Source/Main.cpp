@@ -5,7 +5,7 @@
 #include "Utility/Vector3D.hpp"
 
 typedef std::vector<std::vector<std::vector<int> > >  int_vec_t;
-typedef Utility::Vector3D<int> player_coord;
+typedef CraftWorld::Utility::Vector3D<int> player_coord;
 
 /*
 These functions will check if you can move in a certain direction.

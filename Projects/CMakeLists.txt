@@ -6,3 +6,6 @@ add_subdirectory(Server)
 
 # Add client project
 add_subdirectory(Client)
+
+# Add SAMOVAR project
+add_subdirectory(SAMOVAR)
