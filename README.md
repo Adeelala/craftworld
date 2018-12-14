@@ -26,6 +26,10 @@ Once that is done, run the following command to build Boost and install the nece
 ```bash
 ./b2 install
 ```
+Or run ```bash
+./b2 install --address-model=64
+```
+To install it in 64 bit.
 
 You can then proceed to open the project in CLion. To do this select open and then select the craftworld folder. To be able to build the project you need CMake and a toolchain (MinGW is preferred if you use windows).
 
