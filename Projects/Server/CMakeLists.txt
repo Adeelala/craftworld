@@ -8,6 +8,7 @@ find_package(Boost REQUIRED COMPONENTS serialization mpi)
 set(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 
 # Make common and Boost library headers available
+include_directories(/usr/local/include)
 include_directories(../Common/Source)
 include_directories(${Boost_INCLUDE_DIRS})
 
