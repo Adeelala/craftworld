@@ -12,9 +12,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 # Add common library target
 file(GLOB_RECURSE SOURCES Source/*.cpp Source/*.hpp)
-add_library(Craftworld-Common
+add_library(CraftWorld-Common
 	${SOURCES}
 	)
 
 # Link Boost
-target_link_libraries(Craftworld-Common ${Boost_LIBRARIES})
+target_link_libraries(CraftWorld-Common ${Boost_LIBRARIES})
