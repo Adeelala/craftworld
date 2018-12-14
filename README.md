@@ -39,7 +39,7 @@ You can then proceed to open the project in CLion. To do this select open and th
 To run the server, you will need to add an environment variable to the run configuration so that the MPI libraries can be found. To do so, in CLion, go to `Run -> Edit configurations... -> CraftWorld-Server` and click the icon at the right of `Environment variables`.
 Then, add a new entry with `LD_LIBRARY_PATH` as name and `/usr/local/lib` as value (if you installed the MPI library somewhere else, use that location as the value).
 
-If you can't build the server due to the program not being able to find mpi.h try the following. Locate mpi.h on your computer, often this file can be found in the folder `/usr/local/include`. Then open the CMakeLists.txt file in the folder `{projectRoot}/Projects/Server`. In this file at the following line above the other include_directories:
+If you can't build the server due to the program not being able to find mpi.h try the following. Locate mpi.h on your computer, often this file can be found in the folder `/usr/local/include`. Then open the CMakeLists.txt file in the folder `{projectRoot}/Projects/Server`. In this file at the following line above the other include_directories or change the existing line when it is already there to:
 ```
 include_directories({absolute path to mpi.h})
 ```
