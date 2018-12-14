@@ -26,7 +26,8 @@ Once that is done, run the following command to build Boost and install the nece
 ```bash
 ./b2 install
 ```
-Or run ```bash
+Or run 
+```bash
 ./b2 install --address-model=64
 ```
 To install it in 64 bit.
