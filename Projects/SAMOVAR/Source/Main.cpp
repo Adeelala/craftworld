@@ -1,5 +1,20 @@
-//g++ test.cpp -o test_exe
-//https://www.codeguru.com/cpp/cpp/cpp_mfc/stl/article.php/c4027/C-Tutorial-A-Beginners-Guide-to-stdvector-Part-1.htm
+/*
+useable functions
+
+All movement functions returns int_vec_t map:
+int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID);
+int_vec_t moveEast(int_vec_t map, player_coord player, int playerID);
+int_vec_t moveSouth(int_vec_t map, player_coord player, int playerID);
+int_vec_t moveWest(int_vec_t map, player_coord player, int playerID);
+
+All remove and put block functions returns int_vec_t map;
+int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
+int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
+int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
+int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
+
+
+*/
 #include <iostream>
 #include <vector>
 #include "Utility/Vector3D.hpp"
@@ -18,10 +33,18 @@ West = x-axis - 1
 Assuming: 
 dirt = 0
 air = 1
-player_self = 2
-and player_other = 3
+player = playerID
 */
 
+/*
+
+===============================================================
+
+Movement functions
+
+===============================================================
+
+*/
 
 int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
 	/*When accessing the 3d vector it might be easier to use it as
@@ -58,7 +81,7 @@ int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
 		is a dirk block*/
 		//if(map[(map_y_loc_end + 1) + player_z] == 0 && map[(map_y_loc_end + 1) + player_z] == 0){
 
-		else if(map[player.x][player.y][player.z + 1] == 0 && map[player.x][player.y + 1][player.z + 1]){
+		else if(map[player.x][player.y][player.z + 1] != 0 && map[player.x][player.y + 1][player.z + 1] != 0){
 			/*Old position gets filled with air*/
 			map[player.x][player.y][player.z] = 1;
 			map[player.x][player.y][player.z] = 1;
@@ -103,7 +126,7 @@ int_vec_t moveEast(int_vec_t map, player_coord player, int playerID){
 		is a dirk block*/
 		//if(map[(map_y_loc_end + 1) + player_z] == 0 && map[(map_y_loc_end + 1) + player_z] == 0){
 
-		else if(map[player.x + 1][player.y][player.z] == 0 && map[player.x + 1][player.y + 1][player.z]){
+		else if(map[player.x + 1][player.y][player.z] != 0 && map[player.x + 1][player.y + 1][player.z] != 0){
 			/*Old position gets filled with air*/
 			map[player.x][player.y][player.z] = 1;
 			map[player.x][player.y][player.z] = 1;
@@ -150,7 +173,7 @@ int_vec_t moveSouth(int_vec_t map, player_coord player, int playerID){
 		is a dirk block*/
 		//if(map[(map_y_loc_end + 1) + player_z] == 0 && map[(map_y_loc_end + 1) + player_z] == 0){
 
-		else if(map[player.x][player.y][player.z - 1] == 0 && map[player.x][player.y + 1][player.z - 1]){
+		else if(map[player.x][player.y][player.z - 1] != 0 && map[player.x][player.y + 1][player.z - 1] != 0){
 			/*Old position gets filled with air*/
 			map[player.x][player.y][player.z] = 1;
 			map[player.x][player.y][player.z] = 1;
@@ -168,8 +191,6 @@ int_vec_t moveSouth(int_vec_t map, player_coord player, int playerID){
 	}
 
 }
-
-
 
 
 int_vec_t moveWest(int_vec_t map, player_coord player, int playerID){
@@ -198,7 +219,7 @@ int_vec_t moveWest(int_vec_t map, player_coord player, int playerID){
 		is a dirk block*/
 		//if(map[(map_y_loc_end + 1) + player_z] == 0 && map[(map_y_loc_end + 1) + player_z] == 0){
 
-		else if(map[player.x - 1][player.y][player.z] == 0 && map[player.x - 1][player.y + 1][player.z]){
+		else if(map[player.x - 1][player.y][player.z] != 0 && map[player.x - 1][player.y + 1][player.z] != 0){
 			/*Old position gets filled with air*/
 			map[player.x][player.y][player.z] = 1;
 			map[player.x][player.y][player.z] = 1;
@@ -216,3 +237,102 @@ int_vec_t moveWest(int_vec_t map, player_coord player, int playerID){
 	}
 
 }
+
+int_vec_t standStill(int_vec_t map, player_coord player, int playerID){
+	return map;
+}
+
+/*
+
+===============================================================
+
+Removing blocks
+
+===============================================================
+
+*/
+
+
+
+int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(player.z + 1 < map_vector_dimension_size - 1){
+		if(map[player.x][player.y][player.z + 1] == 0){
+
+			/*Old block position gets filled with air*/
+			map[player.x][player.y][player.z + 1] = 1;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
+
+int_vec_t removeBlockSouth(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(player.z - 1 < map_vector_dimension_size - 1){
+		if(map[player.x][player.y][player.z - 1] == 0){
+
+			/*Old block position gets filled with air*/
+			map[player.x][player.y][player.z - 1] = 1;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
+
+int_vec_t removeBlockEast(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(player.x + 1 < map_vector_dimension_size - 1){
+		if(map[player.x + 1][player.y][player.z] == 0){
+
+			/*Old block position gets filled with air*/
+			map[player.x + 1][player.y][player.z] = 1;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
+
+int_vec_t removeBlockWest(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(player.x - 1 < map_vector_dimension_size - 1){
+		if(map[player.x - 1][player.y][player.z] == 0){
+
+			/*Old block position gets filled with air*/
+			map[player.x - 1][player.y][player.z] = 1;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
+
+
+
