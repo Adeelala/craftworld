@@ -1,20 +1,41 @@
 /*
 useable functions
 
+The movement functions check if they can move the player in a certain direction
+if its possible then it moves the player to the new position if not then
+the player will not move
+
 All movement functions returns int_vec_t map:
 int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID);
 int_vec_t moveEast(int_vec_t map, player_coord player, int playerID);
 int_vec_t moveSouth(int_vec_t map, player_coord player, int playerID);
 int_vec_t moveWest(int_vec_t map, player_coord player, int playerID);
 
-All remove and put block functions returns int_vec_t map;
+
+The remove functions checks if you can grab the block in front of the player
+if you can grab it, it will be removed and at the location of the block 
+there will be air
+
+All remove block functions returns int_vec_t map;
 int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
 int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
 int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
 int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
 
+The standstill function just returns the map, but it can be used to make the 
+game trace more readeable.
 
 int_vec_t standStill(int_vec_t map, player_coord player, int playerID);
+
+The add functions checks if the block in front of the player is empty and filled
+with air, if so the player can place a block. If not then the player will not
+do anything
+
+All add block functions returns int_vec_t map;
+int_vec_t addBlockNorth(int_vec_t map, player_coord player, int playerID);
+int_vec_t addBlockNorth(int_vec_t map, player_coord player, int playerID);
+int_vec_t addBlockNorth(int_vec_t map, player_coord player, int playerID);
+int_vec_t addBlockNorth(int_vec_t map, player_coord player, int playerID);
 
 
 */
@@ -337,5 +358,90 @@ int_vec_t removeBlockWest(int_vec_t map, player_coord player, int playerID){
 	}
 }
 
+/*
+============================================================
 
+Adding blocks
 
+============================================================
+*/
+
+int_vec_t addBlockNorth(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(abs(player.z + 1) < map_vector_dimension_size - 1){
+		if(map[player.x][player.y][player.z + 1] == 1){
+
+			/*Old block position gets filled with air*/
+			map[player.x][player.y][player.z + 1] = 0;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
+
+int_vec_t addBlockSouth(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(abs(player.z - 1) < map_vector_dimension_size - 1){
+		if(map[player.x][player.y][player.z - 1] == 1){
+
+			/*Old block position gets filled with air*/
+			map[player.x][player.y][player.z - 1] = 0;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
+
+int_vec_t addBlockEast(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(abs(player.x + 1) < map_vector_dimension_size - 1){
+		if(map[player.x + 1][player.y][player.z] == 1){
+
+			/*Old block position gets filled with air*/
+			map[player.x + 1][player.y][player.z] = 0;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
+
+int_vec_t addBlockWest(int_vec_t map, player_coord player, int playerID){
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+
+	/*If the block in front of the player is something you can grab, then remove it*/
+	if(abs(player.x - 1) < map_vector_dimension_size - 1){
+		if(map[player.x - 1][player.y][player.z] == 1){
+
+			/*Old block position gets filled with air*/
+			map[player.x - 1][player.y][player.z] = 0;
+		}
+		else{
+			/*If there is no block to remove just return the map*/
+			return map;
+		}	
+
+	}
+}
