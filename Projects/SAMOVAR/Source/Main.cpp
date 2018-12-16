@@ -14,6 +14,9 @@ int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
 int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID);
 
 
+int_vec_t standStill(int_vec_t map, player_coord player, int playerID);
+
+
 */
 #include <iostream>
 #include <vector>
@@ -60,7 +63,7 @@ int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
 
 	/*Now that we have all the necessary data, we can start moving the character*/
 	/*Check if the player is trying to move out of bounds into a different map*/
-	if(player.z + 1 > map_vector_dimension_size - 1){
+	if(abs(player.z + 1) > map_vector_dimension_size - 1){
 		/*!!Need to discuss how to swap to another map!!*/
 		/*For now the player has to manually change server, so we will just keep them at the location they are in*/
 		/*!!Maybe we can remove the player at this point?*/
@@ -68,7 +71,7 @@ int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
 	}
 	else{
 		/*Check if the players upper body will stay in the map*/
-		if(player.y + 1 > map_vector_dimension_size - 1){
+		if(abs(player.y + 1) > map_vector_dimension_size - 1){
 			/*If the player cannot be moved just return the map and player as is*/
 			return map;
 
@@ -107,13 +110,13 @@ int_vec_t moveEast(int_vec_t map, player_coord player, int playerID){
 	
 
 	/*Check if the player is trying to move out of bounds into a different map*/
-	if(player.x + 1 > map_vector_dimension_size - 1){
+	if(abs(player.x + 1) > map_vector_dimension_size - 1){
 		/*!!Need to discuss how to swap to another map!!*/
 		return map;
 	}
 	else{
 		/*Check if the players upper body will stay in the map*/
-		if(player.y + 1 > map_vector_dimension_size - 1){
+		if(abs(player.y + 1) > map_vector_dimension_size - 1){
 			/*If the player cannot be moved just return the map and player as is*/
 			return map;
 
@@ -152,7 +155,7 @@ int_vec_t moveSouth(int_vec_t map, player_coord player, int playerID){
 	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
 	
 
-	if(player.z - 1 > map_vector_dimension_size - 1){
+	if(abs(player.z - 1) > map_vector_dimension_size - 1){
 		/*!!Need to discuss how to swap to another map!!*/
 		/*For now the player has to manually change server, so we will just keep them at the location they are in*/
 		/*!!Maybe we can remove the player at this point?*/
@@ -160,7 +163,7 @@ int_vec_t moveSouth(int_vec_t map, player_coord player, int playerID){
 	}
 	else{
 		/*Check if the players upper body will stay in the map*/
-		if(player.y - 1 > map_vector_dimension_size - 1){
+		if(abs(player.y) - 1 > map_vector_dimension_size - 1){
 			/*If the player cannot be moved just return the map and player as is*/
 			return map;
 
@@ -200,13 +203,13 @@ int_vec_t moveWest(int_vec_t map, player_coord player, int playerID){
 	
 
 	/*Check if the player is trying to move out of bounds into a different map*/
-	if(player.x - 1 > map_vector_dimension_size - 1){
+	if(abs(player.x - 1) > map_vector_dimension_size - 1){
 		/*!!Need to discuss how to swap to another map!!*/
 		return map;
 	}
 	else{
 		/*Check if the players upper body will stay in the map*/
-		if(player.y + 1 > map_vector_dimension_size - 1){
+		if(abs(player.y + 1) > map_vector_dimension_size - 1){
 			/*If the player cannot be moved just return the map and player as is*/
 			return map;
 
@@ -260,7 +263,7 @@ int_vec_t removeBlockNorth(int_vec_t map, player_coord player, int playerID){
 	
 
 	/*If the block in front of the player is something you can grab, then remove it*/
-	if(player.z + 1 < map_vector_dimension_size - 1){
+	if(abs(player.z + 1) < map_vector_dimension_size - 1){
 		if(map[player.x][player.y][player.z + 1] == 0){
 
 			/*Old block position gets filled with air*/
@@ -280,7 +283,7 @@ int_vec_t removeBlockSouth(int_vec_t map, player_coord player, int playerID){
 	
 
 	/*If the block in front of the player is something you can grab, then remove it*/
-	if(player.z - 1 < map_vector_dimension_size - 1){
+	if(abs(player.z - 1) < map_vector_dimension_size - 1){
 		if(map[player.x][player.y][player.z - 1] == 0){
 
 			/*Old block position gets filled with air*/
@@ -300,7 +303,7 @@ int_vec_t removeBlockEast(int_vec_t map, player_coord player, int playerID){
 	
 
 	/*If the block in front of the player is something you can grab, then remove it*/
-	if(player.x + 1 < map_vector_dimension_size - 1){
+	if(abs(player.x + 1) < map_vector_dimension_size - 1){
 		if(map[player.x + 1][player.y][player.z] == 0){
 
 			/*Old block position gets filled with air*/
@@ -320,7 +323,7 @@ int_vec_t removeBlockWest(int_vec_t map, player_coord player, int playerID){
 	
 
 	/*If the block in front of the player is something you can grab, then remove it*/
-	if(player.x - 1 < map_vector_dimension_size - 1){
+	if(abs(player.x - 1) < map_vector_dimension_size - 1){
 		if(map[player.x - 1][player.y][player.z] == 0){
 
 			/*Old block position gets filled with air*/
