@@ -50,7 +50,7 @@ int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
 		/*Check if the players upper body will stay in the map*/
 		if(player.y + 1 > map_vector_dimension_size - 1){
 			/*If the player cannot be moved just return the map and player as is*/
-			return map, player;
+			return map;
 
 		}
 
