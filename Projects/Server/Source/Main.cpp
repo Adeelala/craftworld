@@ -1,24 +1,37 @@
 #include <iostream>
 #include <boost/asio.hpp>
+#include <boost/mpi/environment.hpp>
+#include <boost/mpi/communicator.hpp>
 
-#include "World.hpp"
+#include "Matchmaker.hpp"
+#include "Slave.hpp"
 
-using boost::asio::ip::tcp;
+using namespace CraftWorld;
 
 int main(int argc, char* argv[]) {
-	std::cout << "Starting server..." << std::flush;
+	std::cout << "Starting server..." << std::endl;
 
-	CraftWorld::World world;
+	// Initialize the MPI environment
+	boost::mpi::environment environment(argc, argv);
 
-	boost::asio::io_service ioService;
+	// Get MPI world
+	boost::mpi::communicator world;
 
 	try {
-		tcp::acceptor acceptor(ioService, tcp::endpoint(tcp::v4(), 8000));
-		tcp::socket socket(ioService);
-		acceptor.accept(socket);
-		std::string message = "Hello world!";
-		boost::system::error_code ignored_error;
-		boost::asio::write(socket, boost::asio::buffer(message), ignored_error);
+		// Set up servers
+		if(world.rank() == 0) {
+			// Set up the matchmaker
+			Matchmaker server(8000);
+
+			// Run the matchmaker
+			server.run();
+		} else {
+			// Set up a new slave
+			Slave server(8000);
+
+			// Run the slave
+			server.run();
+		}
 	} catch(std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}
