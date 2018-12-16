@@ -23,7 +23,7 @@ and player_other = 3
 */
 
 
-int_vec_t moveNorth(int_vec_t map, player_coord player){
+int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
 	/*When accessing the 3d vector it might be easier to use it as
 	a single contiguous array*/
 	int map_vector_dimension_size = map.size() / 3;
@@ -67,16 +67,16 @@ int_vec_t moveNorth(int_vec_t map, player_coord player){
 			map[player.x][player.y][player.z] = 1;
 
 			/*New position gets filled with player*/
-			map[player.x][player.y][player.z + 1] = 2;
-			map[player.x][player.y + 1][player.z + 1] = 2;
+			map[player.x][player.y][player.z + 1] = playerID;
+			map[player.x][player.y + 1][player.z + 1] = playerID;
 
 			
-			player_z = player.z + 1;
+			//player_z = player.z + 1;
 
 		}
 		else{
-			/*If the player cannot be moved just return the map and player as is*/
-			return map, player;
+			/*If the player cannot be moved just return the map as is*/
+			return map;
 		}	
 
 	}
@@ -88,7 +88,7 @@ int_vec_t moveNorth(int_vec_t map, player_coord player){
 
 
 
-int main()
-{
-  std::cout << "Hello World!";
-}
+// int main()
+// {
+//   std::cout << "Hello World!";
+// }
