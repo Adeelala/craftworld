@@ -24,6 +24,7 @@ void dataHandler(const std::string& data) {
 	World world;
 	archive >> BOOST_SERIALIZATION_NVP(world);
 
+	// TODO: overwrite the current world in client to this new one
 	std::cout << "Deserialized world!" << std::endl;
 }
 
