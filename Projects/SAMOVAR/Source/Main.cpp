@@ -85,10 +85,3 @@ int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
 
 
 }
-
-
-
-// int main()
-// {
-//   std::cout << "Hello World!";
-// }

@@ -13,7 +13,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 # Add SAMOVAR target
 file(GLOB_RECURSE SOURCES Source/*.cpp Source/*.hpp)
-add_executable(CraftWorld-SAMOVAR
+add_library(CraftWorld-SAMOVAR
 	${SOURCES}
 	)
 
