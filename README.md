@@ -34,6 +34,9 @@ To install it in 64 bit.
 
 You can then proceed to open the project in CLion. To do this select open and then select the craftworld folder. To be able to build the project you need CMake and a toolchain (MinGW is preferred if you use windows).
 
+If you have problems running your executables (Client and Server alike) due to an error that the dynamic libraries weren't linked correctly, go to `Run -> Edit configurations... -> CraftWorld-Server` and click the icon at the right of `Environemnt variables`.
+Then, add a new entry with `DYLD_LIBRARY_PATH` as name and the absolute path to the boost library lib folder, so something like `{pathToProject}/Libraries/boost/lib`. Do the same for CraftWorld-Client.
+
 # Running the server
 
 To run the server, you will need to add an environment variable to the run configuration so that the MPI libraries can be found. To do so, in CLion, go to `Run -> Edit configurations... -> CraftWorld-Server` and click the icon at the right of `Environment variables`.
