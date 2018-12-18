@@ -45,12 +45,6 @@ namespace CraftWorld {
 		print("Received world");
 
 		print("Local chunk count: " + static_cast<std::string>(world_.getSize()));
-
-		// Start the IO context
-		if(isMatchmaker()) {
-			// Only the matchmakers will use TCP connections
-			ioContext_.run();
-		}
 	}
 
 	void Server::print(const std::string& message) {
@@ -62,18 +56,24 @@ namespace CraftWorld {
 	}
 
 	void Server::startListening() {
+		print("Listening for new connections...");
+
+		// Open a new connection on the current socket
+		auto connection = std::make_shared<Connection>(*this);
+
+		// Add the connection to the list of open connections
+		connections_.push_back(connection);
+
 		acceptor_.async_accept(
+			connection->socket_,
+
 			// Create a new lambda which asynchronously handles the client request and calls run again to start accepting new connections
-			[&](const boost::system::error_code& error, tcp::socket socket) {
+			[&](const boost::system::error_code& error) {
+				print("New incoming connection");
+
 				if(!error) {
-					// Open a new connection on the current socket
-					auto connection = Connection(std::move(socket), *this);
-
-					// Add the connection to the list of open connections
-					connections_.push_back(std::move(connection));
-
 					// Start the connection
-					connection.start();
+					connection->start();
 				}
 
 				// Listen for other new connections
@@ -88,6 +88,9 @@ namespace CraftWorld {
 	void Server::run() {
 		if(isMatchmaker()) {
 			startListening();
+
+			// Only the matchmakers will use TCP connections
+			ioContext_.run();
 		}
 
 		// Start main loop
@@ -99,7 +102,9 @@ namespace CraftWorld {
 			if(isMatchmaker()) {
 				std::set<int> serversToRefresh;
 				for(auto& connection : connections_) {
-					serversToRefresh.insert(connection.serverRank_);
+					if(connection->serverRank_ >= 0) {
+						serversToRefresh.insert(connection->serverRank_);
+					}
 				}
 				for(auto& rank : serversToRefresh) {
 					communicator_.isend(rank, 0, std::make_shared<Actions::Action>(Actions::GetWorldAction(std::to_string(communicator_.rank()))));
@@ -139,8 +144,8 @@ namespace CraftWorld {
 
 					// We found the player, notify the corresponding connection
 					for(auto& connection : connections_) {
-						if(connection.username_ == foundPlayerAction->username) {
-							connection.serverRank_ = std::stoi(foundPlayerAction->source);
+						if(connection->username_ == foundPlayerAction->username) {
+							connection->serverRank_ = std::stoi(foundPlayerAction->source);
 						}
 					}
 				} else if(dynamic_cast<Actions::GetWorldAction*>(action.get())) {
@@ -153,13 +158,13 @@ namespace CraftWorld {
 
 					// We received the world from a server, forward it to all clients
 					for(auto& connection : connections_) {
-						if(connection.serverRank_ == std::stoi(refreshWorldAction->source)) {
+						if(connection->serverRank_ == std::stoi(refreshWorldAction->source)) {
 							// Serialize and send the world
 							std::stringstream stringStream;
 							boost::archive::text_oarchive archive(stringStream);
 							archive << BOOST_SERIALIZATION_NVP(refreshWorldAction);
 
-							connection.send(stringStream.str());
+							connection->send(stringStream.str());
 						}
 					}
 				}

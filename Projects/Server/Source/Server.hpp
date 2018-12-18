@@ -41,7 +41,7 @@ namespace CraftWorld {
 			/**
 			 * The currently open connections, associated to the username of the player on that connection.
 			 */
-			std::vector<Connection> connections_;
+			std::vector<std::shared_ptr<Connection>> connections_;
 
 			/**
 			 * The amount of matchmaker servers that are in use.

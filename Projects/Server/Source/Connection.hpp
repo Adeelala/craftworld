@@ -44,7 +44,7 @@ namespace CraftWorld {
 			/**
 			 * The rank of the server that contains this player.
 			 */
-			int serverRank_;
+			int serverRank_ = -1;
 
 			/**
 			 * Asynchronously receives data.
@@ -60,10 +60,9 @@ namespace CraftWorld {
 		public:
 			/**
 			 * Creates a new Connection.
-			 * @param socket The socket to use.
 			 * @param server The server.
 			 */
-			Connection(tcp::socket socket, Server& server);
+			Connection(Server& server);
 
 			/**
 			 * Starts the Connection.

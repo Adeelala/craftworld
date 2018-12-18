@@ -62,7 +62,8 @@ namespace CraftWorld {
         auto connectAction = std::make_shared<Actions::Action>(Actions::ConnectAction("", username_));
 		archive << BOOST_SERIALIZATION_NVP(connectAction);
         boost::system::error_code ignored_error;
-        boost::asio::write(socket_, boost::asio::buffer(stringStream.str()),ignored_error);
+        std::cout << "Sending: " << stringStream.str() << std::endl;
+        boost::asio::write(socket_, boost::asio::buffer(stringStream.str() + "\n\n"),ignored_error);
 
 	    while(true)
         {
@@ -70,7 +71,6 @@ namespace CraftWorld {
 
 	        // Just wrote something to the server, wait 10 milliseconds in order to avoid server overloading
             usleep(1000000);
-            break;
         }
 	}
 
@@ -78,7 +78,7 @@ namespace CraftWorld {
 	    std::thread read(&Client::readLoop, this, dataHandler);
 	    std::thread write(&Client::writeLoop, this);
 
-	    read.join();
+	    //read.join();
 	    write.join();
 
 	    std::cout << "Closing client" << std::endl;

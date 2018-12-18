@@ -15,18 +15,19 @@
 #include "Actions/LocatePlayerAction.hpp"
 
 namespace CraftWorld {
-	Connection::Connection(tcp::socket socket, Server& server) : socket_(std::move(socket)), server_(server) {
+	Connection::Connection(Server& server) : socket_(server.acceptor_.get_executor().context()), server_(server) {
 	}
 
 	void Connection::receive() {
-		boost::asio::async_read(
+		boost::asio::async_read_until(
 			socket_,
-			boost::asio::buffer(receiveMessage_),
+			boost::asio::dynamic_buffer(receiveMessage_),
+			"\n\n",
 			[&](const boost::system::error_code& errorCode, std::size_t length) {
 				if(!errorCode) {
 					// Process incoming messages
 					std::stringstream stringStream;
-					stringStream << receiveMessage_;
+					stringStream << receiveMessage_.substr(0, receiveMessage_.size() - 2);
 					boost::archive::text_iarchive archive(stringStream);
 					std::shared_ptr<Actions::Action> action;
 					archive >> BOOST_SERIALIZATION_NVP(action);
@@ -77,7 +78,7 @@ namespace CraftWorld {
 	}
 
 	void Connection::start() {
-		std::cout << "Made a connection!" << std::endl;
+		server_.print("Made a connection!");
 
 		receive();
 	}
