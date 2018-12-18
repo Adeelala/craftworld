@@ -6,7 +6,6 @@
 #include <boost/mpi/collectives.hpp>
 #include <Actions/LocatePlayerAction.hpp>
 
-#include "Connection.hpp"
 #include "Chunk.hpp"
 #include "Actions/Action.hpp"
 #include "Actions/LocatePlayerAction.hpp"
@@ -65,7 +64,7 @@ namespace CraftWorld {
 					auto connection = Connection(std::move(socket), *this);
 
 					// Add the connection to the list of open connections
-					connections_.push_back(connection);
+					connections_.push_back(std::move(connection));
 
 					// Start the connection
 					connection.start();

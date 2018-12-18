@@ -5,6 +5,7 @@
 #include <boost/mpi/communicator.hpp>
 
 #include "World.hpp"
+#include "Connection.hpp"
 
 using boost::asio::ip::tcp;
 

@@ -79,6 +79,7 @@ namespace CraftWorld {
 	void Connection::start() {
 		std::cout << "Made a connection!" << std::endl;
 
+		receive();
 		// Start connection loop
 		//for(;;) {
 
