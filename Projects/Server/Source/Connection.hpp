@@ -39,7 +39,12 @@ namespace CraftWorld {
 			/**
 			 * The username of the player connected to this server.
 			 */
-			std::string username;
+			std::string username_;
+
+			/**
+			 * The rank of the server that contains this player.
+			 */
+			int serverRank_;
 
 			/**
 			 * Asynchronously receives data.
