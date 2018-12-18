@@ -62,6 +62,66 @@ player = playerID
 
 /*
 
+================================================================
+
+Get player coord
+
+================================================================
+
+*/
+
+player_coord getPlayerCoord(int_vec_t map, player_coord player, int playerID){
+	
+	int map_vector_dimension_size = map.size() / 3;
+	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
+	
+	/*
+		Go through all x,y and z coordinates to check where the player is located on the map
+	*/
+	for(int x = 0; x < single_2d_row - 1; x++;){
+		/*The player has to stand on a block, so there always
+		has to be a block underneath the player. so y can never be 0
+		when checking for players*/
+		for(int y = 1; y < single_2d_row - 1; y++;){
+			for(int z = 0; z < single_2d_row - 1; z++;){
+				/*If the player is on that location
+				 You have to check if you are looking at the upper
+				 or lower part of the body
+				*/
+				if(map[x][y][z] == playerID){
+					if(map[x][y - 1]][z] == playerID){
+						player.x = x;
+						player.y = y - 1;
+						player.z = z;
+						return player;
+					}
+					else{
+						player.x = x;
+						player.y = y;
+						player.z = z;
+						return player;
+
+					}
+
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+
+
+
+
+/*
+
 ===============================================================
 
 Movement functions
@@ -71,8 +131,7 @@ Movement functions
 */
 
 int_vec_t moveNorth(int_vec_t map, player_coord player, int playerID){
-	/*When accessing the 3d vector it might be easier to use it as
-	a single contiguous array*/
+
 	int map_vector_dimension_size = map.size() / 3;
 	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
 	/*The array is saved as X-values, Y-values, Z-values so to
@@ -170,8 +229,6 @@ int_vec_t moveEast(int_vec_t map, player_coord player, int playerID){
 }
 
 int_vec_t moveSouth(int_vec_t map, player_coord player, int playerID){
-	/*When accessing the 3d vector it might be easier to use it as
-	a single contiguous array*/
 	int map_vector_dimension_size = map.size() / 3;
 	int single_2d_row = (map.size() / map_vector_dimension_size) / map_vector_dimension_size;
 	
