@@ -1,6 +1,12 @@
 /*
 useable functions
 
+This function returns the x,y and z values in the player vector that you pass along.
+player_coord getPlayerCoord(int_vec_t map, player_coord player, int playerID);
+
+
+
+
 The movement functions check if they can move the player in a certain direction
 if its possible then it moves the player to the new position if not then
 the player will not move
