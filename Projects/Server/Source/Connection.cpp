@@ -80,13 +80,5 @@ namespace CraftWorld {
 		std::cout << "Made a connection!" << std::endl;
 
 		receive();
-		// Start connection loop
-		//for(;;) {
-
-		//}
-
-
-		// Send the message
-		//send(stringStream.str());
 	}
 }

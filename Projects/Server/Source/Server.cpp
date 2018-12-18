@@ -5,6 +5,7 @@
 #include <iostream>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/nvp.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 #include <boost/mpi/collectives.hpp>
 #include <unistd.h>
 
