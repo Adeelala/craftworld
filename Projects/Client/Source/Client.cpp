@@ -3,6 +3,8 @@
 #include <iterator>
 #include <iostream>
 
+#include "Actions/ConnectAction.hpp"
+
 namespace CraftWorld {
 	Client::Client(const std::string& host, const int& port) : socket_(
 		[&]() {
@@ -54,9 +56,12 @@ namespace CraftWorld {
 
 	void Client::writeLoop() {
 	    // TODO: send ConnectAction to server
-//        std::stringstream stringStream;
-//        boost::archive::text_oarchive archive(stringStream);
-//        archive << BOOST_SERIALIZATION_NVP(world);
+	    Actions::ConnectAction action("", username_);
+        std::stringstream stringStream;
+        boost::archive::text_oarchive archive(stringStream);
+//        archive << BOOST_SERIALIZATION_NVP();
+        boost::system::error_code ignored_error;
+        boost::asio::write(socket, boost::asio::buffer(stringStream.str()),ignored_error);
 
 	    while(true)
         {

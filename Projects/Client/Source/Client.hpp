@@ -18,7 +18,7 @@ namespace CraftWorld {
 			 * The socket used to transmit data.
 			 */
 			tcp::socket socket_;
-			bool write = true;
+			std::string username_="Steve";
 
 		public:
 			/**
