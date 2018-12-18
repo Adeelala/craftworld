@@ -29,27 +29,52 @@ namespace CraftWorld {
 	) {
 	}
 
+	void Client::readLoop(const std::function<void(const std::string&)>& dataHandler) {
+        while(true) {
+            // Receive data
+            std::string data;
+            boost::system::error_code errorCode;
+            size_t length = boost::asio::read_until(socket_, boost::asio::dynamic_buffer(data), "\n\n", errorCode);
+            data = data.substr(0, length - 2);
+
+            // Check if data was received
+            if(errorCode == boost::asio::error::eof) {
+                // The connection was closed, so exit
+                exit(0);
+            } else if(errorCode) {
+                // An error occurred
+                throw boost::system::system_error(errorCode);
+            }
+
+            // Handle data
+            std::cout << "Received data: " << std::endl << data << std::endl;
+            dataHandler(data);
+        }
+	}
+
+	void Client::writeLoop() {
+	    // TODO: send ConnectAction to server
+//        std::stringstream stringStream;
+//        boost::archive::text_oarchive archive(stringStream);
+//        archive << BOOST_SERIALIZATION_NVP(world);
+
+	    while(true)
+        {
+	        // TODO: put client game decision making here and write it to the server, remove the break when done
+
+	        // Just wrote something to the server, wait 10 milliseconds in order to avoid server overloading
+            usleep(1000000);
+            break;
+        }
+	}
+
 	void Client::run(const std::function<void(const std::string&)>& dataHandler) {
-		// Keep looping to receive data
-		while(true) {
-			// Receive data
-			std::string data;
-			boost::system::error_code errorCode;
-			size_t length = boost::asio::read_until(socket_, boost::asio::dynamic_buffer(data), "\n\n", errorCode);
-			data = data.substr(0, length - 2);
+	    std::thread read(&Client::readLoop, this, dataHandler);
+	    std::thread write(&Client::writeLoop, this);
 
-			// Check if data was received
-			if(errorCode == boost::asio::error::eof) {
-				// The connection was closed, so exit
-				exit(0);
-			} else if(errorCode) {
-				// An error occurred
-				throw boost::system::system_error(errorCode);
-			}
+	    read.join();
+	    write.join();
 
-			// Handle data
-			std::cout << "Received data: " << std::endl << data << std::endl;
-			dataHandler(data);
-		}
+	    std::cout << "Closing client" << std::endl;
 	}
 }

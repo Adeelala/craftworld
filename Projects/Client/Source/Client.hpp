@@ -3,6 +3,9 @@
 #include <functional>
 #include <string>
 #include <boost/asio.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <thread>
+#include <unistd.h>
 
 using boost::asio::ip::tcp;
 
@@ -15,6 +18,7 @@ namespace CraftWorld {
 			 * The socket used to transmit data.
 			 */
 			tcp::socket socket_;
+			bool write = true;
 
 		public:
 			/**
@@ -23,6 +27,16 @@ namespace CraftWorld {
 			 * @param port The port of the Server to connect to.
 			 */
 			Client(const std::string& host, const int& port);
+
+			/**
+			 * Receives data and keeps looping.
+			 */
+			void readLoop(const std::function<void(const std::string&)>& dataHandler);
+
+			/**
+			 * Writes data and keeps looping.
+			 */
+			void writeLoop();
 
 			/**
 			 * Starts communication with the Server.
