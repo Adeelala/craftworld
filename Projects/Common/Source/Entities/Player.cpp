@@ -6,6 +6,6 @@
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Entities::Player, "Player")
 
 namespace CraftWorld::Entities {
-	Player::Player(const Utility::Vector3D<int>& velocity) : Entity(velocity) {
+	Player::Player(const Utility::Vector3D<int>& velocity, const std::string& username) : Entity(velocity), username(username) {
 	}
 }

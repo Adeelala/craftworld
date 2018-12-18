@@ -4,6 +4,8 @@
 #include <boost/asio.hpp>
 #include <boost/mpi/communicator.hpp>
 
+#include "World.hpp"
+
 using boost::asio::ip::tcp;
 
 namespace CraftWorld {
@@ -15,7 +17,6 @@ namespace CraftWorld {
 	class Server {
 			friend Connection;
 
-		protected:
 			/**
 			 * The IO context to use.
 			 */
@@ -29,14 +30,48 @@ namespace CraftWorld {
 			/**
 			 * The communicator which allows communication with other MPI processes.
 			 */
-			boost::mpi::communicator world_;
+			boost::mpi::communicator communicator_;
+
+			/**
+			 * The game world.
+			 */
+			World world_;
+
+			/**
+			 * The currently open connections, associated to the username of the player on that connection.
+			 */
+			std::vector<Connection> connections_;
+
+			/**
+			 * The amount of matchmaker servers that are in use.
+			 */
+			int matchmakerCount_;
+
+			/**
+			 * Prints the specified message to the console.
+			 * @param message The message to print.
+			 */
+			void print(const std::string& message);
+
+			/**
+			 * Starts listening for new connections.
+			 */
+			void startListening();
 
 		public:
 			/**
 			 * Creates a new Server.
-			 * @param port The port to listen on for new Connections.
+			 * @param matchmakerCount The amount of matchmaker servers to run.
+			 * @param port The port to listen on for new Connections. This will only affect matchmaker servers and can be left unspecified for other servers.
+			 * @param worldChunkSize The amount of chunks in the world.
+			 * @param chunkBlockSize The amount of blocks in a chunk.
 			 */
-			explicit Server(const int& port);
+			explicit Server(const int& matchmakerCount, const int& port = -1, const Utility::Vector3D<int>& worldChunkSize = { 4, 4, 4 }, const Utility::Vector3D<int>& chunkBlockSize = { 4, 4, 4 });
+
+			/**
+			 * Makes the class polymorphic.
+			 */
+			~Server() = default;
 
 			/**
 			 * Starts the Server.
@@ -45,8 +80,15 @@ namespace CraftWorld {
 			void run();
 
 			/**
-			 * Makes the class polymorphic.
+			 * Determines if this Server is a matchmaker.
+			 * @return Whether this Server is a matchmaker.
 			 */
-			~Server() = default;
+			bool isMatchmaker() const;
+
+			/**
+			 * Determines if this Server is the creator of the World.
+			 * @return Whether this Server is the creator.
+			 */
+			bool isCreator() const;
 	};
 }

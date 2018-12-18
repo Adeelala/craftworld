@@ -28,9 +28,15 @@ namespace CraftWorld::Entities {
 
 		public:
 			/**
+			 * The player's username.
+			 */
+			std::string username;
+
+			/**
 			 * Creates a new Player.
 			 * @param velocity The default speed.
+			 * @param username The username.
 			 */
-			Player(const Utility::Vector3D<int>& velocity = { 0, 0, 0 });
+			Player(const Utility::Vector3D<int>& velocity = { 0, 0, 0 }, const std::string& username = "Steve");
 	};
 }

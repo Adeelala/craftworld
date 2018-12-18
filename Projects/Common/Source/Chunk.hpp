@@ -6,6 +6,8 @@
 #include "Grid.hpp"
 #include "Entities/Entity.hpp"
 #include "Utility/Vector3D.hpp"
+#include "Entities/Block.hpp"
+#include "Entities/Player.hpp"
 
 namespace CraftWorld {
 	using EntityGrid = Grid<Entities::Entity>;
@@ -25,10 +27,21 @@ namespace CraftWorld {
 			 */
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
+				// We need to explicitly register these types as they're stored as pointers to their base class
+				archive.register_type(static_cast<Entities::Block*>(nullptr));
+				archive.register_type(static_cast<Entities::Player*>(nullptr));
+
 				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(EntityGrid);
 			}
 
 		public:
+			/**
+			 * Generates a new Chunk.
+			 * @param blockSize The amount of Blocks the Chunk should be able to contain, in every dimension.
+			 * @return The new Chunk.
+			 */
+			static Chunk generate(const Utility::Vector3D<int>& blockSize);
+
 			/**
 			 * Creates a new Chunk.
 			 */

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <vector>
 #include <boost/serialization/access.hpp>
@@ -57,6 +58,44 @@ namespace CraftWorld {
 				std::shared_ptr<Type> temporary = entities[second.x][second.y][second.z];
 				entities[second.x][second.y][second.z] = entities[first.x][first.y][first.z];
 				entities[first.x][first.y][first.z] = temporary;
+			}
+
+			/**
+			 * Gets the amount of entities in the Grid.
+			 * @return The amount of entities.
+			 */
+			Utility::Vector3D<int> getSize() const {
+				Utility::Vector3D<int> result;
+
+				result.x = static_cast<int>(entities.size());
+
+				for(const auto& yAxis : entities) {
+					if(yAxis.size() > result.y) {
+						result.y = static_cast<int>(yAxis.size());
+					}
+
+					for(const auto& zAxis : yAxis) {
+						if(zAxis.size() > result.z) {
+							result.z = static_cast<int>(zAxis.size());
+						}
+					}
+				}
+
+				return result;
+			}
+
+			/**
+			 * Loops all entities in the grid.
+			 * @param function The function to perform for all entities.
+			 */
+			void forEach(const std::function<void(std::shared_ptr<Type>&)>& function) {
+				for(auto& yAxis : entities) {
+					for(auto& zAxis : yAxis) {
+						for(auto& entity : zAxis) {
+							function(entity);
+						}
+					}
+				}
 			}
 	};
 }

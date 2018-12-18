@@ -21,9 +21,21 @@ using mpi ;
 
 You will also need to have an MPI implementation installed on the system that will compile and run the server. OpenMPI is a good implementation and can be found here: <https://www.open-mpi.org/>. Instructions on how to install OpenMPI are available here: <https://www.open-mpi.org/faq/?category=building#easy-build>.
 
+There is currently a bug in Boost.MPI that has been fixed less than a week ago but is still in the development branch of boost.
+To get the bugfix into the local copy of boost, execute the following commands to fast forward to its commit:
+
+```bash
+cd ./libs/mpi
+git checkout develop
+git pull
+git checkout master
+git merge dd03e959d7914eba4edcd9d03067cb620a7c43cf
+```
+
 Once that is done, run the following command to build Boost and install the necessary files:
 
 ```bash
+cd ../..
 ./b2 install
 ```
 

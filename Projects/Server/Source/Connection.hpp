@@ -22,16 +22,29 @@ namespace CraftWorld {
 			tcp::socket socket_;
 
 			/**
-			 * The message to send.
+			 * The message to receive.
 			 */
-			std::string message_;
+			 std::string receiveMessage_;
 
 			/**
-			 * Handles writes by the CLient.
-			 * @param error The error that occurred.
-			 * @param bytesTransferred The amount of bytes that were transferred.
+			 * The message to send.
 			 */
-			void handleWrite(const boost::system::error_code& error, size_t bytesTransferred);
+			std::string sendMessage_;
+
+			/**
+			 * The server.
+			 */
+			Server& server_;
+
+			/**
+			 * The username of the player connected to this server.
+			 */
+			std::string username;
+
+			/**
+			 * Asynchronously receives data.
+			 */
+			void receive();
 
 			/**
 			 * Sends a new message to the Client.
@@ -42,9 +55,10 @@ namespace CraftWorld {
 		public:
 			/**
 			 * Creates a new Connection.
-			 * @param server The Server to use for the Connection.
+			 * @param socket The socket to use.
+			 * @param server The server.
 			 */
-			Connection(Server& server);
+			Connection(tcp::socket socket, Server& server);
 
 			/**
 			 * Starts the Connection.

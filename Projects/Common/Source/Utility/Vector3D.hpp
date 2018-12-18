@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/nvp.hpp>
@@ -55,6 +56,14 @@ namespace CraftWorld::Utility {
 			 * @param z The coordinate on the Z axis.
 			 */
 			Vector3D(const Type& x, const Type& y, const Type& z) : x(x), y(y), z(z) {
+			}
+
+			/**
+			 * Converts the Vector3D to a string.
+			 * @return A string representation of the Vector3D.
+			 */
+			operator std::string() const {
+				return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
 			}
 
 			/**

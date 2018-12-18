@@ -8,25 +8,28 @@ BOOST_CLASS_EXPORT_GUID(CraftWorld::World, "World")
 BOOST_CLASS_EXPORT_GUID(CraftWorld::ChunkGrid, "ChunkGrid")
 
 namespace CraftWorld {
+	World World::generate(const Utility::Vector3D<int>& worldChunkSize, const Utility::Vector3D<int>& chunkBlockSize) {
+		World world(worldChunkSize, chunkBlockSize);
+
+		// Create some chunks
+		world.forEach([&](auto& entity) {
+			entity = std::make_shared<Chunk>(Chunk::generate(chunkBlockSize));
+		});
+
+		return world;
+	}
+
 	World::World(const Utility::Vector3D<int>& worldChunkSize, const Utility::Vector3D<int>& chunkBlockSize) : ChunkGrid(worldChunkSize) {
 		// Create some chunks
-		for(int x = 0; x < entities.size(); ++x) {
-			for(int y = 0; y < entities[x].size(); ++y) {
-				for(int z = 0; z < entities[x][y].size(); ++z) {
-					entities[x][y][z] = std::make_shared<Chunk>(Chunk(chunkBlockSize));
-				}
-			}
-		}
+		forEach([&](auto& entity) {
+			entity = std::make_shared<Chunk>(Chunk(chunkBlockSize));
+		});
 	}
 
 	void World::update() {
 		// Update all chunks
-		for(int x = 0; x < entities.size(); ++x) {
-			for(int y = 0; y < entities[x].size(); ++y) {
-				for(int z = 0; z < entities[x][y].size(); ++z) {
-					std::static_pointer_cast<Chunk>(entities[x][y][z])->update();
-				}
-			}
-		}
+		forEach([](auto& entity) {
+			std::static_pointer_cast<Chunk>(entity)->update();
+		});
 	}
 }
