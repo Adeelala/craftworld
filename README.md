@@ -38,15 +38,29 @@ Once that is done, run the following command to build Boost and install the nece
 cd ../..
 ./b2 install
 ```
+Or run 
+```bash
+./b2 install --address-model=64
+```
+To install it in 64 bit.
 
 You can then proceed to open the project in CLion. To do this select open and then select the craftworld folder. To be able to build the project you need CMake and a toolchain (MinGW is preferred if you use windows).
+
+If you have problems running your executables (Client and Server alike) due to an error that the dynamic libraries weren't linked correctly, go to `Run -> Edit configurations... -> CraftWorld-Server` and click the icon at the right of `Environemnt variables`.
+Then, add a new entry with `DYLD_LIBRARY_PATH` as name and the absolute path to the boost library lib folder, so something like `{pathToProject}/Libraries/boost/lib`. Do the same for CraftWorld-Client.
 
 # Running the server
 
 To run the server, you will need to add an environment variable to the run configuration so that the MPI libraries can be found. To do so, in CLion, go to `Run -> Edit configurations... -> CraftWorld-Server` and click the icon at the right of `Environment variables`.
 Then, add a new entry with `LD_LIBRARY_PATH` as name and `/usr/local/lib` as value (if you installed the MPI library somewhere else, use that location as the value).
 
-Once you have added the variable, open up a terminal and navigate to the folder where the server's build files are located.
+If you can't build the server due to the program not being able to find mpi.h try the following. Locate mpi.h on your computer, often this file can be found in the folder `/usr/local/include`. Then open the CMakeLists.txt file in the folder `{projectRoot}/Projects/Server`. In this file at the following line above the other include_directories or change the existing line when it is already there to:
+```
+include_directories({absolute path to mpi.h})
+```
+This should tell CMake where to find mpi.h.
+
+Once you have added the variable and you can build the server project, open up a terminal and navigate to the folder where the server's build files are located.
 Usually this is at `{projectRoot}/cmake-build-debug/Projects/Server`. This folder should contain the server executable, with the name `CraftWorld-Server`.
 
 To run the executable, use the following command:

@@ -10,6 +10,7 @@ find_package(MPI REQUIRED)
 set(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 
 # Make common, Boost and MPI library headers available
+include_directories(/usr/local/include)
 include_directories(../Common/Source)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${MPI_INCLUDE_PATH})
