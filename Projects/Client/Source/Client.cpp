@@ -1,28 +1,33 @@
 #include "Client.hpp"
-
+#include "../../SAMOVAR/Main.cpp"
 #include <iterator>
 #include <iostream>
 
+typedef CraftWorld::Utility::Vector3D<int> player_coord;
+
 namespace CraftWorld {
-	Client::Client(const std::string& host, const int& port) : socket_(
+	Client::Client(const std::string& host, const int& port, int ID) : socket_(
 		[&]() {
-			// Initialize IO context
-			boost::asio::io_context ioContext;
+                    // Initialize ID
+                    Client::ID = ID;
 
-			// Resolve server endpoint
-			tcp::resolver::results_type endpoints = tcp::resolver(ioContext).resolve(host, std::to_string(port));
+                    // Initialize IO context
+                    boost::asio::io_context ioContext;
 
-			// Create new socket
-			tcp::socket socket(ioContext);
+                    // Resolve server endpoint
+                    tcp::resolver::results_type endpoints = tcp::resolver(ioContext).resolve(host, std::to_string(port));
 
-			// Establish a connection
-			try {
-				boost::asio::connect(socket, endpoints);
-			} catch(std::exception& e) {
-				std::cerr << e.what() << std::endl;
+                    // Create new socket
+                    tcp::socket socket(ioContext);
 
-				exit(1);
-			}
+                    // Establish a connection
+                    try {
+                            boost::asio::connect(socket, endpoints);
+                    } catch(std::exception& e) {
+                            std::cerr << e.what() << std::endl;
+
+                            exit(1);
+                    }
 
 			return socket;
 		}()
@@ -56,6 +61,17 @@ namespace CraftWorld {
 	    while(true)
         {
 	        // TODO: put client game decision making here and write it to the server, remove the break when done
+                // Get player coordinates
+                playercoord = getPlayerCoord(map, player, ID);
+                
+
+                // Randomly choose function:
+                  switch(rand() % 4) {
+                    case 0: playercoord = moveNorth(); break;
+                    case 1: playercoord = moveEast(); break;
+                    case 2: playercoord = moveSouth(); break;
+                    case 3: playercoord = moveWest(); break;
+                  }
 
 	        // Just wrote something to the server, wait 10 milliseconds in order to avoid server overloading
             boost::this_thread::sleep( boost::posix_time::millisec(10));

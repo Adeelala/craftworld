@@ -18,6 +18,7 @@ namespace CraftWorld {
 			 */
 			tcp::socket socket_;
 			bool write = true;
+                        int ID;
 
 		public:
 			/**
@@ -25,7 +26,7 @@ namespace CraftWorld {
 			 * @param host The host of the Server to connect to.
 			 * @param port The port of the Server to connect to.
 			 */
-			Client(const std::string& host, const int& port);
+			Client(const std::string& host, const int& port, int ID);
 
 			/**
 			 * Receives data and keeps looping.
