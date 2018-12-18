@@ -40,7 +40,7 @@ namespace CraftWorld {
 							auto connectAction = std::static_pointer_cast<Actions::ConnectAction>(action);
 
 							// Set the username
-							username = connectAction->username;
+							username_ = connectAction->username;
 
 							// Locate the server that has the player
 							for(int rank = 0; rank < server_.communicator_.size(); ++rank) {

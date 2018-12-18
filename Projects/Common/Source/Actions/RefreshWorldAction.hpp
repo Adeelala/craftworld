@@ -3,9 +3,10 @@
 #include <string>
 
 #include "Action.hpp"
+#include "../World.hpp"
 
 namespace CraftWorld::Actions {
-	class FoundPlayerAction : public Action {
+	class RefreshWorldAction : public Action {
 			friend boost::serialization::access;
 
 			/**
@@ -17,20 +18,20 @@ namespace CraftWorld::Actions {
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
 				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Action);
-				archive & BOOST_SERIALIZATION_NVP(username);
+				archive & BOOST_SERIALIZATION_NVP(world);
 			}
 
 		public:
 			/**
-			 * The player's username.
+			 * The world.
 			 */
-			std::string username;
+			World world;
 
 			/**
-			 * Creates a new FoundPlayerAction.
+			 * Creates a new RefreshWorldAction.
 			 * @param source The source of the Action.
-			 * @param username The username of the player that was found.
+			 * @param world The world to update.
 			 */
-			FoundPlayerAction(const std::string& source, const std::string& username);
+			RefreshWorldAction(const std::string& source, const World& world);
 	};
 }

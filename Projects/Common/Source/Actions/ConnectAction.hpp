@@ -19,6 +19,7 @@ namespace CraftWorld::Actions {
 				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Action);
 				archive & BOOST_SERIALIZATION_NVP(username);
 			}
+
 		public:
 			/**
 			 * The player's username.

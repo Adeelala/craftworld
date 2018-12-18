@@ -1,14 +1,19 @@
 #include "Server.hpp"
 
+#include <set>
+#include <string>
 #include <iostream>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/mpi/collectives.hpp>
-#include <Actions/LocatePlayerAction.hpp>
+#include <unistd.h>
 
 #include "Chunk.hpp"
 #include "Actions/Action.hpp"
 #include "Actions/LocatePlayerAction.hpp"
+#include "Actions/FoundPlayerAction.hpp"
+#include "Actions/RefreshWorldAction.hpp"
+#include "Actions/GetWorldAction.hpp"
 
 namespace CraftWorld {
 	Server::Server(const int& matchmakerCount, const int& port, const Utility::Vector3D<int>& worldChunkSize, const Utility::Vector3D<int>& chunkBlockSize) : matchmakerCount_(matchmakerCount), acceptor_(ioContext_, tcp::endpoint(tcp::v4(), port)), world_({ worldChunkSize.x / communicator_.size(), worldChunkSize.y, worldChunkSize.z }, chunkBlockSize) {
@@ -89,6 +94,17 @@ namespace CraftWorld {
 			// Synchronize updates between servers
 			communicator_.barrier();
 
+			// Request game state from all servers that have active players
+			if(isMatchmaker()) {
+				std::set<int> serversToRefresh;
+				for(auto& connection : connections_) {
+					serversToRefresh.insert(connection.serverRank_);
+				}
+				for(auto& rank : serversToRefresh) {
+					communicator_.isend(rank, 0, std::make_shared<Actions::Action>(Actions::GetWorldAction(std::to_string(communicator_.rank()))));
+				}
+			}
+
 			// Check for incoming requests from other servers
 			std::shared_ptr<Actions::Action> action;
 			communicator_.irecv(boost::mpi::any_source, 0, action);
@@ -109,18 +125,50 @@ namespace CraftWorld {
 
 										if(player->username == locatePlayerAction->username) {
 											// Found the player!
-											print("Found player!");
+											print("Found player: " + locatePlayerAction->username);
+											communicator_.isend(std::stoi(locatePlayerAction->source), 0, std::make_shared<Actions::Action>(Actions::FoundPlayerAction(std::to_string(communicator_.rank()), locatePlayerAction->username)));
 										}
 									}
 								}
 							);
 						}
 					);
+				} else if(dynamic_cast<Actions::FoundPlayerAction*>(action.get())) {
+					auto foundPlayerAction = std::static_pointer_cast<Actions::FoundPlayerAction>(action);
+
+					// We found the player, notify the corresponding connection
+					for(auto& connection : connections_) {
+						if(connection.username_ == foundPlayerAction->username) {
+							connection.serverRank_ = std::stoi(foundPlayerAction->source);
+						}
+					}
+				} else if(dynamic_cast<Actions::GetWorldAction*>(action.get())) {
+					auto getWorldAction = std::static_pointer_cast<Actions::GetWorldAction>(action);
+
+					// We need to send the world to the requester
+					communicator_.isend(std::stoi(getWorldAction->source), 0, std::make_shared<Actions::Action>(Actions::RefreshWorldAction(std::to_string(communicator_.rank()), world_)));
+				} else if(dynamic_cast<Actions::RefreshWorldAction*>(action.get())) {
+					auto refreshWorldAction = std::static_pointer_cast<Actions::RefreshWorldAction>(action);
+
+					// We received the world from a server, forward it to all clients
+					for(auto& connection : connections_) {
+						if(connection.serverRank_ == std::stoi(refreshWorldAction->source)) {
+							// Serialize and send the world
+							std::stringstream stringStream;
+							boost::archive::text_oarchive archive(stringStream);
+							archive << BOOST_SERIALIZATION_NVP(refreshWorldAction);
+
+							connection.send(stringStream.str());
+						}
+					}
 				}
 			}
 
 			// Update world
 			world_.update();
+
+			// Wait a second
+			usleep(1000000);
 		}
 	}
 
