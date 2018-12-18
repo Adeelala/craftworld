@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "Starting server..." << std::endl;
 
 	// Initialize the MPI environment
-	boost::mpi::environment environment(argc, argv);
+	boost::mpi::environment environment(argc, argv, boost::mpi::threading::level::multiple);
 
 	// Get MPI world
 	boost::mpi::communicator world;

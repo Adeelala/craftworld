@@ -8,6 +8,7 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/mpi/collectives.hpp>
 #include <unistd.h>
+#include <thread>
 
 #include "Chunk.hpp"
 #include "Actions/Action.hpp"
@@ -80,21 +81,27 @@ namespace CraftWorld {
 				startListening();
 			}
 		);
+
+		// Only the matchmakers will use TCP connections
+		ioContext_.run();
 	}
 
 	#pragma clang diagnostic push
 	#pragma clang diagnostic ignored "-Wmissing-noreturn"
 
 	void Server::run() {
-		if(isMatchmaker()) {
-			startListening();
-
-			// Only the matchmakers will use TCP connections
-			ioContext_.run();
-		}
+		std::thread(
+			[&] {
+				if(isMatchmaker()) {
+					startListening();
+				}
+			}
+		).detach();
 
 		// Start main loop
 		for(;;) {
+			print("Executing main loop...");
+
 			// Synchronize updates between servers
 			communicator_.barrier();
 
@@ -118,7 +125,7 @@ namespace CraftWorld {
 			if(action != nullptr) {
 				print("Received action: " + action->name);
 
-				if(dynamic_cast<Actions::LocatePlayerAction*>(action.get())) {
+				if(action->name == "LocatePlayerAction") {
 					auto locatePlayerAction = std::static_pointer_cast<Actions::LocatePlayerAction>(action);
 
 					// We need to locate a player, so search our world and see if we have that player
@@ -132,14 +139,14 @@ namespace CraftWorld {
 										if(player->username == locatePlayerAction->username) {
 											// Found the player!
 											print("Found player: " + locatePlayerAction->username);
-											communicator_.isend(std::stoi(locatePlayerAction->source), 0, std::make_shared<Actions::Action>(Actions::FoundPlayerAction(std::to_string(communicator_.rank()), locatePlayerAction->username)));
+											communicator_.isend(std::stoi(locatePlayerAction->source), 0, std::make_shared<Actions::FoundPlayerAction>(std::to_string(communicator_.rank()), locatePlayerAction->username));
 										}
 									}
 								}
 							);
 						}
 					);
-				} else if(dynamic_cast<Actions::FoundPlayerAction*>(action.get())) {
+				} else if(action->name == "FoundPlayerAction") {
 					auto foundPlayerAction = std::static_pointer_cast<Actions::FoundPlayerAction>(action);
 
 					// We found the player, notify the corresponding connection
@@ -148,12 +155,12 @@ namespace CraftWorld {
 							connection->serverRank_ = std::stoi(foundPlayerAction->source);
 						}
 					}
-				} else if(dynamic_cast<Actions::GetWorldAction*>(action.get())) {
+				} else if(action->name == "GetWorldAction") {
 					auto getWorldAction = std::static_pointer_cast<Actions::GetWorldAction>(action);
 
 					// We need to send the world to the requester
-					communicator_.isend(std::stoi(getWorldAction->source), 0, std::make_shared<Actions::Action>(Actions::RefreshWorldAction(std::to_string(communicator_.rank()), world_)));
-				} else if(dynamic_cast<Actions::RefreshWorldAction*>(action.get())) {
+					communicator_.isend(std::stoi(getWorldAction->source), 0, std::make_shared<Actions::RefreshWorldAction>(std::to_string(communicator_.rank()), world_));
+				} else if(action->name == "RefreshWorldAction") {
 					auto refreshWorldAction = std::static_pointer_cast<Actions::RefreshWorldAction>(action);
 
 					// We received the world from a server, forward it to all clients

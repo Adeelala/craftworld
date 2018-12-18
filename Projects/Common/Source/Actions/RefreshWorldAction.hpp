@@ -29,6 +29,11 @@ namespace CraftWorld::Actions {
 
 			/**
 			 * Creates a new RefreshWorldAction.
+			 */
+			RefreshWorldAction() = default;
+
+			/**
+			 * Creates a new RefreshWorldAction.
 			 * @param source The source of the Action.
 			 * @param world The world to update.
 			 */

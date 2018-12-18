@@ -29,6 +29,7 @@ namespace CraftWorld {
 					std::stringstream stringStream;
 					stringStream << receiveMessage_.substr(0, receiveMessage_.size() - 2);
 					boost::archive::text_iarchive archive(stringStream);
+					archive.register_type(static_cast<Actions::ConnectAction*>(nullptr));
 					std::shared_ptr<Actions::Action> action;
 					archive >> BOOST_SERIALIZATION_NVP(action);
 
@@ -36,7 +37,7 @@ namespace CraftWorld {
 					if(action != nullptr) {
 						server_.print("Received connection action: " + action->name);
 
-						if(dynamic_cast<Actions::ConnectAction*>(action.get())) {
+						if(action->name == "ConnectAction") {
 							// New client connection
 							auto connectAction = std::static_pointer_cast<Actions::ConnectAction>(action);
 
@@ -47,7 +48,7 @@ namespace CraftWorld {
 							for(int rank = 0; rank < server_.communicator_.size(); ++rank) {
 								server_.print("Locating player: " + connectAction->username);
 
-								server_.communicator_.isend(rank, 0, std::make_shared<Actions::Action>(Actions::LocatePlayerAction(std::to_string(server_.communicator_.rank()), connectAction->username)));
+								server_.communicator_.isend(rank, 0, std::make_shared<Actions::LocatePlayerAction>(std::to_string(server_.communicator_.rank()), connectAction->username));
 							}
 						}
 					}

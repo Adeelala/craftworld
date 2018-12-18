@@ -33,5 +33,3 @@ if(MPI_LINK_FLAGS)
 	set_target_properties(CraftWorld-Server PROPERTIES
 		LINK_FLAGS "${MPI_LINK_FLAGS}")
 endif()
-
-message(${MPI_CXX_COMPILER})

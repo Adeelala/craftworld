@@ -28,6 +28,11 @@ namespace CraftWorld::Actions {
 
 			/**
 			 * Creates a new LocatePlayerAction.
+			 */
+			LocatePlayerAction() = default;
+
+			/**
+			 * Creates a new LocatePlayerAction.
 			 * @param source The source of the Action.
 			 * @param username The username of the player to locate.
 			 */

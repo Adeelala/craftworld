@@ -28,6 +28,11 @@ namespace CraftWorld::Actions {
 
 			/**
 			 * Creates a new ConnectAction.
+			 */
+			ConnectAction() = default;
+
+			/**
+			 * Creates a new ConnectAction.
 			 * @param source The source of the Action.
 			 * @param username The username of the player that was found.
 			 */

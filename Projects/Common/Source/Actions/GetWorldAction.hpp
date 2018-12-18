@@ -29,6 +29,11 @@ namespace CraftWorld::Actions {
 
 			/**
 			 * Creates a new GetWorldAction.
+			 */
+			GetWorldAction() = default;
+
+			/**
+			 * Creates a new GetWorldAction.
 			 * @param source The source of the Action.
 			 * @param world The world to update.
 			 */

@@ -47,7 +47,7 @@ namespace CraftWorld::Actions {
 			 * @param name The name.
 			 * @param source The source.
 			 */
-			Action(const std::string& name, const std::string& source = "");
+			Action(const std::string& name, const std::string& source);
 
 			/**
 			 * Declares the class as polymorphic.

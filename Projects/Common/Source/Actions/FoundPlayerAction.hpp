@@ -28,6 +28,11 @@ namespace CraftWorld::Actions {
 
 			/**
 			 * Creates a new FoundPlayerAction.
+			 */
+			FoundPlayerAction() = default;
+
+			/**
+			 * Creates a new FoundPlayerAction.
 			 * @param source The source of the Action.
 			 * @param username The username of the player that was found.
 			 */
