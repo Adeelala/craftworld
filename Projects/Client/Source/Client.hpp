@@ -3,8 +3,9 @@
 #include <functional>
 #include <string>
 #include <boost/asio.hpp>
-#include<boost/bind.hpp>
-#include <boost/thread.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <thread>
+#include <unistd.h>
 
 using boost::asio::ip::tcp;
 

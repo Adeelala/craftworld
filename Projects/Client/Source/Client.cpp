@@ -53,22 +53,28 @@ namespace CraftWorld {
 	}
 
 	void Client::writeLoop() {
+	    // TODO: send ConnectAction to server
+//        std::stringstream stringStream;
+//        boost::archive::text_oarchive archive(stringStream);
+//        archive << BOOST_SERIALIZATION_NVP(world);
+
 	    while(true)
         {
 	        // TODO: put client game decision making here and write it to the server, remove the break when done
 
 	        // Just wrote something to the server, wait 10 milliseconds in order to avoid server overloading
-            boost::this_thread::sleep( boost::posix_time::millisec(10));
-	        break;
+            usleep(1000000);
+            break;
         }
 	}
 
 	void Client::run(const std::function<void(const std::string&)>& dataHandler) {
-        boost::thread_group threads;
+	    std::thread read(&Client::readLoop, this, dataHandler);
+	    std::thread write(&Client::writeLoop, this);
 
-        threads.create_thread(boost::bind(&Client::readLoop, this, dataHandler));
-        threads.create_thread(boost::bind(&Client::writeLoop, this));
+	    read.join();
+	    write.join();
 
-        threads.join_all();
+	    std::cout << "Closing client" << std::endl;
 	}
 }
