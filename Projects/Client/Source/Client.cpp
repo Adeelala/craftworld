@@ -82,40 +82,40 @@ namespace CraftWorld {
 				case 4: //Send action standStill
 					// Do nothing
 					break;
-				//
-				//	//Remove block actions
-				//case 5: //Send action removeBlockNorth;
-				//	send(std::make_shared<Actions::RemoveBlockNorth>(-1, player, playerID));
-				//	break;
-				//
-				//case 6: //Send action removeBlockEast;
-				//	send(std::make_shared<Actions::RemoveBlockEast>(-1, player, playerID));
-				//	break;
-				//
-				//case 7: //Send action removeBlockSouth;
-				//	send(std::make_shared<Actions::RemoveBlockSouth>(-1, player, playerID));
-				//	break;
-				//
-				//case 8: //Send action removeBlockWest;
-				//	send(std::make_shared<Actions::RemoveBlockWest>(-1, player, playerID));
-				//	break;
-				//
-				//	//Add block actions
-				//case 9:  //Send action addBlockNorth;
-				//	send(std::make_shared<Actions::AddBlockNorth>(-1, player, playerID));
-				//	break;
-				//
-				//case 10: //Send action addBlockEast;
-				//	send(std::make_shared<Actions::AddBlockEast>(-1, player, playerID));
-				//	break;
-				//
-				//case 11: //Send action addBlockSouth;
-				//	send(std::make_shared<Actions::AddBlockSouth>(-1, player, playerID));
-				//	break;
-				//
-				//case 12: //Send action addBlockWest;
-				//	send(std::make_shared<Actions::AddBlockWest>(-1, player, playerID));
-				//	break;
+
+					//Remove block actions
+				case 5: //Send action removeBlockNorth;
+					send(std::make_shared<Actions::PickUpBlockAction>(-1, Actions::PickUpBlockAction::NORTH));
+					break;
+
+				case 6: //Send action removeBlockEast;
+					send(std::make_shared<Actions::PickUpBlockAction>(-1, Actions::PickUpBlockAction::EAST));
+					break;
+
+				case 7: //Send action removeBlockSouth;
+					send(std::make_shared<Actions::PickUpBlockAction>(-1, Actions::PickUpBlockAction::SOUTH));
+					break;
+
+				case 8: //Send action removeBlockWest;
+					send(std::make_shared<Actions::PickUpBlockAction>(-1, Actions::PickUpBlockAction::WEST));
+					break;
+
+					//Add block actions
+				case 9:  //Send action addBlockNorth;
+					send(std::make_shared<Actions::PlaceBlockAction>(-1, Actions::PlaceBlockAction::NORTH));
+					break;
+
+				case 10: //Send action addBlockEast;
+					send(std::make_shared<Actions::PlaceBlockAction>(-1, Actions::PlaceBlockAction::EAST));
+					break;
+
+				case 11: //Send action addBlockSouth;
+					send(std::make_shared<Actions::PlaceBlockAction>(-1, Actions::PlaceBlockAction::SOUTH));
+					break;
+
+				case 12: //Send action addBlockWest;
+					send(std::make_shared<Actions::PlaceBlockAction>(-1, Actions::PlaceBlockAction::WEST));
+					break;
 			}
 		}
 	}

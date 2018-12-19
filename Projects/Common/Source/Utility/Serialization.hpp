@@ -10,6 +10,8 @@
 #include "../Actions/RefreshWorldAction.hpp"
 #include "../Actions/GetWorldAction.hpp"
 #include "../Actions/MoveAction.hpp"
+#include "../Actions/PlaceBlockAction.hpp"
+#include "../Actions/PickUpBlockAction.hpp"
 
 namespace CraftWorld::Utility::Serialization {
 	std::shared_ptr<Actions::Action> fromString(const std::string& serializedAction);
@@ -23,6 +25,8 @@ namespace CraftWorld::Utility::Serialization {
 		archive.register_type(static_cast<Actions::GetWorldAction*>(nullptr));
 		archive.register_type(static_cast<Actions::LocatePlayerAction*>(nullptr));
 		archive.register_type(static_cast<Actions::MoveAction*>(nullptr));
+		archive.register_type(static_cast<Actions::PlaceBlockAction*>(nullptr));
+		archive.register_type(static_cast<Actions::PickUpBlockAction*>(nullptr));
 		archive.register_type(static_cast<Actions::RefreshWorldAction*>(nullptr));
 		archive << BOOST_SERIALIZATION_NVP(action);
 

@@ -49,12 +49,23 @@ namespace CraftWorld {
 								server_.send(std::make_shared<Actions::LocatePlayerAction>(server_.communicator_.rank(), connectAction->username), rank);
 							}
 						} else if(action->name == "MoveAction") {
-							// New client connection
 							auto moveAction = std::static_pointer_cast<Actions::MoveAction>(action);
 
 							moveAction->source = server_.communicator_.rank();
 
 							server_.send(moveAction, serverRank_);
+						} else if(action->name == "PickUpBlockAction") {
+							auto pickUpBlockAction = std::static_pointer_cast<Actions::PickUpBlockAction>(action);
+
+							pickUpBlockAction->source = server_.communicator_.rank();
+
+							server_.send(pickUpBlockAction, serverRank_);
+						} else if(action->name == "PlaceBlockAction") {
+							auto placeBlockAction = std::static_pointer_cast<Actions::PlaceBlockAction>(action);
+
+							placeBlockAction->source = server_.communicator_.rank();
+
+							server_.send(placeBlockAction, serverRank_);
 						}
 					}
 

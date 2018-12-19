@@ -19,11 +19,9 @@ namespace CraftWorld {
 			for(int y = 0; y < blockSize.y; ++y) {
 				for(int z = 0; z < blockSize.z; ++z) {
 					chunk.entities[x][y][z] = std::make_shared<Entities::Block>(
-						Entities::Block(
-							y < (blockSize.y / 2)
-								? Entities::Block::DIRT
-								: Entities::Block::AIR
-						)
+						y < (blockSize.y / 2)
+							? Entities::Block::DIRT
+							: Entities::Block::AIR
 					);
 				}
 			}
@@ -36,7 +34,7 @@ namespace CraftWorld {
 		// Fill the chunk with blocks
 		forEach(
 			[](auto& entity) {
-				entity = std::make_shared<Entities::Block>(Entities::Block(Entities::Block::AIR));
+				entity = std::make_shared<Entities::Block>(Entities::Block::AIR);
 			}
 		);
 	}

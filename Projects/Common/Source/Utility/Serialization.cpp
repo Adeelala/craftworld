@@ -10,6 +10,8 @@ namespace CraftWorld::Utility::Serialization {
 		archive.register_type(static_cast<Actions::GetWorldAction*>(nullptr));
 		archive.register_type(static_cast<Actions::LocatePlayerAction*>(nullptr));
 		archive.register_type(static_cast<Actions::MoveAction*>(nullptr));
+		archive.register_type(static_cast<Actions::PlaceBlockAction*>(nullptr));
+		archive.register_type(static_cast<Actions::PickUpBlockAction*>(nullptr));
 		archive.register_type(static_cast<Actions::RefreshWorldAction*>(nullptr));
 
 		std::shared_ptr<Actions::Action> action;
