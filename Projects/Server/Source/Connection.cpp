@@ -61,8 +61,6 @@ namespace CraftWorld {
 	}
 
 	void Connection::send(const std::string& message) {
-		std::lock_guard<std::mutex> lock(server_.mutex_);
-
 		sendMessage_ = message + "\n\n";
 
 		// Send message
@@ -70,6 +68,8 @@ namespace CraftWorld {
 			socket_,
 			boost::asio::buffer(sendMessage_),
 			[&](const boost::system::error_code& errorCode, std::size_t length) {
+				std::lock_guard<std::mutex> lock(server_.mutex_);
+				
 				if(!errorCode) {
 					server_.print("Sent data: " + sendMessage_);
 				}
