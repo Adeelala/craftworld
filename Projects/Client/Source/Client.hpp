@@ -1,11 +1,12 @@
 #pragma once
 
-#include <functional>
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <thread>
 #include <unistd.h>
+
+#include "Utility/Serialization.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -20,6 +21,12 @@ namespace CraftWorld {
 			tcp::socket socket_;
 			std::string username_="Steve";
 
+			template<typename ActionType>
+			void send(const ActionType& action) {
+				boost::system::error_code error;
+				boost::asio::write(socket_, boost::asio::buffer(Utility::Serialization::toString(action) + "\n\n"), error);
+			}
+
 		public:
 			/**
 			 * Creates a new Client.
@@ -29,19 +36,9 @@ namespace CraftWorld {
 			Client(const std::string& host, const int& port);
 
 			/**
-			 * Receives data and keeps looping.
-			 */
-			void readLoop(const std::function<void(const std::string&)>& dataHandler);
-
-			/**
-			 * Writes data and keeps looping.
-			 */
-			void writeLoop();
-
-			/**
 			 * Starts communication with the Server.
 			 * @param dataHandler The function that will handle incoming data.
 			 */
-			void run(const std::function<void(const std::string&)>& dataHandler);
+			void run();
 	};
 }

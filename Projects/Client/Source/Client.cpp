@@ -5,6 +5,7 @@
 #include <boost/serialization/shared_ptr.hpp>
 
 #include "Actions/ConnectAction.hpp"
+#include "World.hpp"
 
 namespace CraftWorld {
 	Client::Client(const std::string& host, const int& port) : socket_(
@@ -32,56 +33,90 @@ namespace CraftWorld {
 	) {
 	}
 
-	void Client::readLoop(const std::function<void(const std::string&)>& dataHandler) {
-        while(true) {
-            // Receive data
-            std::string data;
-            boost::system::error_code errorCode;
-            size_t length = boost::asio::read_until(socket_, boost::asio::dynamic_buffer(data), "\n\n", errorCode);
-            data = data.substr(0, length - 2);
+	void Client::run() {
+		send(std::make_shared<Actions::ConnectAction>(-1, username_));
 
-            // Check if data was received
-            if(errorCode == boost::asio::error::eof) {
-                // The connection was closed, so exit
-                exit(0);
-            } else if(errorCode) {
-                // An error occurred
-                throw boost::system::system_error(errorCode);
-            }
+		while(true) {
+			// Receive data
+			std::string data;
+			boost::system::error_code errorCode;
+			size_t length = boost::asio::read_until(socket_, boost::asio::dynamic_buffer(data), "\n\n", errorCode);
+			data = data.substr(0, length - 2);
 
-            // Handle data
-            std::cout << "Received data: " << std::endl << data << std::endl;
-            dataHandler(data);
-        }
-	}
+			// Check if data was received
+			if(errorCode == boost::asio::error::eof) {
+				// The connection was closed, so exit
+				exit(0);
+			} else if(errorCode) {
+				// An error occurred
+				throw boost::system::system_error(errorCode);
+			}
 
-	void Client::writeLoop() {
-	    // TODO: send ConnectAction to server
-        std::stringstream stringStream;
-        boost::archive::text_oarchive archive(stringStream);
-		archive.register_type(static_cast<Actions::ConnectAction*>(nullptr));
-        auto connectAction = std::make_shared<Actions::ConnectAction>(-1, username_);
-		archive << BOOST_SERIALIZATION_NVP(connectAction);
-        boost::system::error_code ignored_error;
-        std::cout << "Sending: " << stringStream.str() << std::endl;
-        boost::asio::write(socket_, boost::asio::buffer(stringStream.str() + "\n\n"),ignored_error);
+			// Handle data
+			std::cout << "Received data: " << std::endl << data << std::endl;
 
-	    while(true)
-        {
-	        // TODO: put client game decision making here and write it to the server, remove the break when done
+			auto refreshWorldAction = std::static_pointer_cast<Actions::RefreshWorldAction>(Utility::Serialization::fromString(data));
 
-	        // Just wrote something to the server, wait 10 milliseconds in order to avoid server overloading
-            usleep(1000000);
-        }
-	}
+			// Get world
+			auto world = refreshWorldAction->world;
 
-	void Client::run(const std::function<void(const std::string&)>& dataHandler) {
-	    std::thread read(&Client::readLoop, this, dataHandler);
-	    std::thread write(&Client::writeLoop, this);
+			// Randomly choose function:
+			switch(rand() % 13) {
+				//Move action
+				case 0: //Send action moveNorth;
+					send(std::make_shared<Actions::MoveAction>(-1, Actions::MoveAction::NORTH));
+					break;
 
-	    //read.join();
-	    write.join();
+				case 1: //Send action moveEast;
+					send(std::make_shared<Actions::MoveAction>(-1, Actions::MoveAction::EAST));
+					break;
 
-	    std::cout << "Closing client" << std::endl;
+				case 2: //Send action moveSouth;
+					send(std::make_shared<Actions::MoveAction>(-1, Actions::MoveAction::SOUTH));
+					break;
+
+				case 3: //Send action moveWest;
+					send(std::make_shared<Actions::MoveAction>(-1, Actions::MoveAction::WEST));
+					break;
+
+				case 4: //Send action standStill
+					// Do nothing
+					break;
+				//
+				//	//Remove block actions
+				//case 5: //Send action removeBlockNorth;
+				//	send(std::make_shared<Actions::RemoveBlockNorth>(-1, player, playerID));
+				//	break;
+				//
+				//case 6: //Send action removeBlockEast;
+				//	send(std::make_shared<Actions::RemoveBlockEast>(-1, player, playerID));
+				//	break;
+				//
+				//case 7: //Send action removeBlockSouth;
+				//	send(std::make_shared<Actions::RemoveBlockSouth>(-1, player, playerID));
+				//	break;
+				//
+				//case 8: //Send action removeBlockWest;
+				//	send(std::make_shared<Actions::RemoveBlockWest>(-1, player, playerID));
+				//	break;
+				//
+				//	//Add block actions
+				//case 9:  //Send action addBlockNorth;
+				//	send(std::make_shared<Actions::AddBlockNorth>(-1, player, playerID));
+				//	break;
+				//
+				//case 10: //Send action addBlockEast;
+				//	send(std::make_shared<Actions::AddBlockEast>(-1, player, playerID));
+				//	break;
+				//
+				//case 11: //Send action addBlockSouth;
+				//	send(std::make_shared<Actions::AddBlockSouth>(-1, player, playerID));
+				//	break;
+				//
+				//case 12: //Send action addBlockWest;
+				//	send(std::make_shared<Actions::AddBlockWest>(-1, player, playerID));
+				//	break;
+			}
+		}
 	}
 }

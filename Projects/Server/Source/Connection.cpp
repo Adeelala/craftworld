@@ -13,6 +13,7 @@
 #include "Actions/Action.hpp"
 #include "Actions/ConnectAction.hpp"
 #include "Actions/LocatePlayerAction.hpp"
+#include "Utility/Serialization.hpp"
 
 namespace CraftWorld {
 	Connection::Connection(Server& server) : socket_(server.acceptor_.get_executor().context()), server_(server) {
@@ -28,7 +29,7 @@ namespace CraftWorld {
 
 				if(!errorCode) {
 					// Process incoming messages
-					auto action = server_.fromString(receiveMessage_.substr(0, receiveMessage_.size() - 2));
+					auto action = Utility::Serialization::fromString(receiveMessage_.substr(0, receiveMessage_.size() - 2));
 
 					// Get the action that needs to be executed
 					if(action != nullptr) {
@@ -47,6 +48,13 @@ namespace CraftWorld {
 
 								server_.send(std::make_shared<Actions::LocatePlayerAction>(server_.communicator_.rank(), connectAction->username), rank);
 							}
+						} else if(action->name == "MoveAction") {
+							// New client connection
+							auto moveAction = std::static_pointer_cast<Actions::MoveAction>(action);
+
+							moveAction->source = server_.communicator_.rank();
+
+							server_.send(moveAction, serverRank_);
 						}
 					}
 
@@ -69,7 +77,7 @@ namespace CraftWorld {
 			boost::asio::buffer(sendMessage_),
 			[&](const boost::system::error_code& errorCode, std::size_t length) {
 				std::lock_guard<std::mutex> lock(server_.mutex_);
-				
+
 				if(!errorCode) {
 					server_.print("Sent data: " + sendMessage_);
 				}

@@ -84,22 +84,6 @@ namespace CraftWorld {
 		ioContext_.run();
 	}
 
-	std::shared_ptr<Actions::Action> Server::fromString(const std::string& serializedAction) {
-		std::stringstream stringStream;
-		stringStream << serializedAction;
-		boost::archive::text_iarchive archive(stringStream);
-		archive.register_type(static_cast<Actions::ConnectAction*>(nullptr));
-		archive.register_type(static_cast<Actions::FoundPlayerAction*>(nullptr));
-		archive.register_type(static_cast<Actions::GetWorldAction*>(nullptr));
-		archive.register_type(static_cast<Actions::LocatePlayerAction*>(nullptr));
-		archive.register_type(static_cast<Actions::RefreshWorldAction*>(nullptr));
-
-		std::shared_ptr<Actions::Action> action;
-		archive >> BOOST_SERIALIZATION_NVP(action);
-
-		return action;
-	}
-
 	std::shared_ptr<Actions::Action> Server::receive() {
 		std::string serializedAction;
 		communicator_.recv(boost::mpi::any_source, 0, serializedAction);
@@ -109,7 +93,7 @@ namespace CraftWorld {
 		if(serializedAction.empty()) {
 			return nullptr;
 		} else {
-			return fromString(serializedAction);
+			return Utility::Serialization::fromString(serializedAction);
 		}
 	}
 
@@ -142,25 +126,14 @@ namespace CraftWorld {
 							auto locatePlayerAction = std::static_pointer_cast<Actions::LocatePlayerAction>(action);
 
 							// We need to locate a player, so search our world and see if we have that player
-							bool found = false;
 							world_.forEach(
 								[&](auto& chunk) {
-									if(found) {
-										return;
-									}
-
 									chunk->forEach(
 										[&](auto& entity) {
-											if(found) {
-												return;
-											}
-
 											if(dynamic_cast<Entities::Player*>(entity.get())) {
 												auto player = std::static_pointer_cast<Entities::Player>(entity);
 
 												if(player->username == locatePlayerAction->username) {
-													found = true;
-
 													// Found the player!
 													print("Found player: " + locatePlayerAction->username);
 
@@ -198,7 +171,60 @@ namespace CraftWorld {
 									// Serialize and send the world
 									print("Sending refresh world action to " + connection->username_);
 
-									connection->send(toString(refreshWorldAction));
+									connection->send(Utility::Serialization::toString(refreshWorldAction));
+								}
+							}
+						} else if(action->name == "MoveAction") {
+							auto moveAction = std::static_pointer_cast<Actions::MoveAction>(action);
+
+							for(auto connection : connections_) {
+								if(connection->serverRank_ == moveAction->source) {
+									for(int chunkX = 0; chunkX < world_.entities.size(); ++chunkX) {
+										for(int chunkY = 0; chunkY < world_.entities[chunkX].size(); ++chunkY) {
+											for(int chunkZ = 0; chunkZ < world_.entities[chunkX][chunkY].size(); ++chunkZ) {
+												auto chunk = world_.entities[chunkX][chunkY][chunkZ];
+
+												for(int blockX = 0; blockX < chunk->entities.size(); ++blockX) {
+													for(int blockY = 0; blockY < chunk->entities[blockX].size(); ++blockY) {
+														for(int blockZ = 0; blockZ < chunk->entities[blockX][blockY].size(); ++blockZ) {
+															auto entity = chunk->entities[blockX][blockY][blockZ];
+
+															if(dynamic_cast<Entities::Player*>(entity.get())) {
+																auto player = std::static_pointer_cast<Entities::Player>(entity);
+
+																const Utility::Vector3D<int> coordinates = { blockX, blockY, blockZ };
+																Utility::Vector3D<int> newCoordinates;
+
+																switch(moveAction->direction) {
+																	case Actions::MoveAction::NORTH:
+																		newCoordinates = coordinates + Utility::Vector3D<int> { 0, 0, 1 };
+																		break;
+
+																	case Actions::MoveAction::EAST:
+																		newCoordinates = coordinates + Utility::Vector3D<int> { 1, 0, 0 };
+																		break;
+
+																	case Actions::MoveAction::SOUTH:
+																		newCoordinates = coordinates + Utility::Vector3D<int> { 0, 0, -1 };
+																		break;
+
+																	case Actions::MoveAction::WEST:
+																		newCoordinates = coordinates + Utility::Vector3D { -1, 0, 0 };
+																		break;
+																}
+
+																if(newCoordinates.x >= 0 && newCoordinates.y >= 0 && newCoordinates.z >= 0 && newCoordinates.x < chunk->getSize().x && newCoordinates.y < (chunk->getSize().y - 1) && newCoordinates.z < chunk->getSize().z) {
+																	print("Moving player " + player->username + " from " + static_cast<std::string>(coordinates) + " to " + static_cast<std::string>(newCoordinates));
+																	
+																	chunk->swap(coordinates, newCoordinates);
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 						}
