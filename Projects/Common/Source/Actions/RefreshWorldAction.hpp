@@ -37,6 +37,6 @@ namespace CraftWorld::Actions {
 			 * @param source The source of the Action.
 			 * @param world The world to update.
 			 */
-			RefreshWorldAction(const std::string& source, const World& world);
+			RefreshWorldAction(const int& source, const World& world);
 	};
 }

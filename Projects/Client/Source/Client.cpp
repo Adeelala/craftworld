@@ -60,7 +60,7 @@ namespace CraftWorld {
         std::stringstream stringStream;
         boost::archive::text_oarchive archive(stringStream);
 		archive.register_type(static_cast<Actions::ConnectAction*>(nullptr));
-        auto connectAction = std::make_shared<Actions::ConnectAction>("", username_);
+        auto connectAction = std::make_shared<Actions::ConnectAction>(-1, username_);
 		archive << BOOST_SERIALIZATION_NVP(connectAction);
         boost::system::error_code ignored_error;
         std::cout << "Sending: " << stringStream.str() << std::endl;

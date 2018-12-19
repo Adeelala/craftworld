@@ -36,6 +36,6 @@ namespace CraftWorld::Actions {
 			 * @param source The source of the Action.
 			 * @param username The username of the player that was found.
 			 */
-			FoundPlayerAction(const std::string& source, const std::string& username);
+			FoundPlayerAction(const int& source, const std::string& username);
 	};
 }

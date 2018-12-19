@@ -6,6 +6,6 @@
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Actions::ConnectAction, "ConnectAction")
 
 namespace CraftWorld::Actions {
-	ConnectAction::ConnectAction(const std::string& source, const std::string& username) : Action("ConnectAction", source), username(username) {
+	ConnectAction::ConnectAction(const int& source, const std::string& username) : Action("ConnectAction", source), username(username) {
 	}
 }

@@ -6,6 +6,6 @@
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Actions::GetWorldAction, "GetWorldAction")
 
 namespace CraftWorld::Actions {
-	GetWorldAction::GetWorldAction(const std::string& source) : Action("GetWorldAction", source) {
+	GetWorldAction::GetWorldAction(const int& source) : Action("GetWorldAction", source) {
 	}
 }

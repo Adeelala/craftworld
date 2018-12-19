@@ -6,6 +6,6 @@
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Actions::RefreshWorldAction, "RefreshWorldAction")
 
 namespace CraftWorld::Actions {
-	RefreshWorldAction::RefreshWorldAction(const std::string& source, const World& world) : Action("RefreshWorldAction", source), world(world) {
+	RefreshWorldAction::RefreshWorldAction(const int& source, const World& world) : Action("RefreshWorldAction", source), world(world) {
 	}
 }

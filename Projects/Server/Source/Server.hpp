@@ -3,6 +3,7 @@
 #include <memory>
 #include <boost/asio.hpp>
 #include <boost/mpi/communicator.hpp>
+#include <mutex>
 
 #include "World.hpp"
 #include "Connection.hpp"
@@ -47,6 +48,11 @@ namespace CraftWorld {
 			 * The amount of matchmaker servers that are in use.
 			 */
 			int matchmakerCount_;
+
+			/**
+			 * The mutex to use.
+			 */
+			std::mutex mutex_;
 
 			/**
 			 * Prints the specified message to the console.

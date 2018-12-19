@@ -6,6 +6,6 @@
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Actions::FoundPlayerAction, "FoundPlayerAction")
 
 namespace CraftWorld::Actions {
-	FoundPlayerAction::FoundPlayerAction(const std::string& source, const std::string& username) : Action("FoundPlayerAction", source), username(username) {
+	FoundPlayerAction::FoundPlayerAction(const int& source, const std::string& username) : Action("FoundPlayerAction", source), username(username) {
 	}
 }

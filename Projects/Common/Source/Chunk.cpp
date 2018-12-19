@@ -18,17 +18,13 @@ namespace CraftWorld {
 		for(int x = 0; x < blockSize.x; ++x) {
 			for(int y = 0; y < blockSize.y; ++y) {
 				for(int z = 0; z < blockSize.z; ++z) {
-					if(x == blockSize.x / 2 && y == blockSize.y / 2 && z == blockSize.z / 2) {
-						chunk.entities[x][y][z] = std::make_shared<Entities::Player>(Entities::Player());
-					} else {
-						chunk.entities[x][y][z] = std::make_shared<Entities::Block>(
-							Entities::Block(
-								y < (blockSize.y / 2)
-									? Entities::Block::DIRT
-									: Entities::Block::AIR
-							)
-						);
-					}
+					chunk.entities[x][y][z] = std::make_shared<Entities::Block>(
+						Entities::Block(
+							y < (blockSize.y / 2)
+								? Entities::Block::DIRT
+								: Entities::Block::AIR
+						)
+					);
 				}
 			}
 		}
@@ -38,9 +34,11 @@ namespace CraftWorld {
 
 	Chunk::Chunk(const Utility::Vector3D<int>& blockSize) : EntityGrid(blockSize) {
 		// Fill the chunk with blocks
-		forEach([](auto& entity) {
-			entity = std::make_shared<Entities::Block>(Entities::Block(Entities::Block::AIR));
-		});
+		forEach(
+			[](auto& entity) {
+				entity = std::make_shared<Entities::Block>(Entities::Block(Entities::Block::AIR));
+			}
+		);
 	}
 
 	void Chunk::update() {

@@ -24,6 +24,7 @@ namespace CraftWorld::Actions {
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
 				archive & BOOST_SERIALIZATION_NVP(name);
+				archive & BOOST_SERIALIZATION_NVP(source);
 			}
 
 		public:
@@ -35,7 +36,7 @@ namespace CraftWorld::Actions {
 			/**
 			 * The source of the action.
 			 */
-			std::string source;
+			int source;
 
 			/**
 			 * Creates a new Action.
@@ -47,7 +48,7 @@ namespace CraftWorld::Actions {
 			 * @param name The name.
 			 * @param source The source.
 			 */
-			Action(const std::string& name, const std::string& source);
+			Action(const std::string& name, const int& source);
 
 			/**
 			 * Declares the class as polymorphic.

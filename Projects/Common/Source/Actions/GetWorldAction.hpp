@@ -6,7 +6,8 @@
 #include "../World.hpp"
 
 namespace CraftWorld::Actions {
-	class GetWorldAction : public Action {
+	class GetWorldAction :
+		public Action {
 			friend boost::serialization::access;
 
 			/**
@@ -18,15 +19,9 @@ namespace CraftWorld::Actions {
 			template<typename ArchiveType>
 			void serialize(ArchiveType& archive, const unsigned int& version) {
 				archive & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Action);
-				archive & BOOST_SERIALIZATION_NVP(world);
 			}
 
 		public:
-			/**
-			 * The world.
-			 */
-			World world;
-
 			/**
 			 * Creates a new GetWorldAction.
 			 */
@@ -37,6 +32,6 @@ namespace CraftWorld::Actions {
 			 * @param source The source of the Action.
 			 * @param world The world to update.
 			 */
-			GetWorldAction(const std::string& source);
+			GetWorldAction(const int& source);
 	};
 }

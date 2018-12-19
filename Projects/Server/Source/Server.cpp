@@ -4,10 +4,13 @@
 #include <string>
 #include <iostream>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/mpi/collectives.hpp>
+#include <boost/optional.hpp>
 #include <unistd.h>
+#include <mpi.h>
 #include <thread>
 
 #include "Chunk.hpp"
@@ -90,6 +93,7 @@ namespace CraftWorld {
 	#pragma clang diagnostic ignored "-Wmissing-noreturn"
 
 	void Server::run() {
+		// Start client <-> server event loop
 		std::thread(
 			[&] {
 				if(isMatchmaker()) {
@@ -98,87 +102,149 @@ namespace CraftWorld {
 			}
 		).detach();
 
-		// Start main loop
-		for(;;) {
-			print("Executing main loop...");
+		// Start server <-> server event loop
+		std::thread(
+			[&] {
+				for(;;) {
+					// Check for incoming requests from other servers
+					std::string serializedAction;
+					communicator_.recv(boost::mpi::any_source, 0, serializedAction);
 
-			// Synchronize updates between servers
-			communicator_.barrier();
+					if(!serializedAction.empty()) {
+						std::lock_guard<std::mutex> lock(mutex_);
 
-			// Request game state from all servers that have active players
-			if(isMatchmaker()) {
-				std::set<int> serversToRefresh;
-				for(auto& connection : connections_) {
-					if(connection->serverRank_ >= 0) {
-						serversToRefresh.insert(connection->serverRank_);
-					}
-				}
-				for(auto& rank : serversToRefresh) {
-					communicator_.isend(rank, 0, std::make_shared<Actions::Action>(Actions::GetWorldAction(std::to_string(communicator_.rank()))));
-				}
-			}
+						std::stringstream stringStream;
+						stringStream << serializedAction;
+						boost::archive::text_iarchive archive(stringStream);
+						archive.register_type(static_cast<Actions::LocatePlayerAction*>(nullptr));
+						archive.register_type(static_cast<Actions::FoundPlayerAction*>(nullptr));
+						archive.register_type(static_cast<Actions::GetWorldAction*>(nullptr));
+						archive.register_type(static_cast<Actions::RefreshWorldAction*>(nullptr));
+						std::shared_ptr<Actions::Action> action;
+						archive >> BOOST_SERIALIZATION_NVP(action);
 
-			// Check for incoming requests from other servers
-			std::shared_ptr<Actions::Action> action;
-			communicator_.irecv(boost::mpi::any_source, 0, action);
+						print("Received action: " + action->name);
 
-			if(action != nullptr) {
-				print("Received action: " + action->name);
+						if(action->name == "LocatePlayerAction") {
+							auto locatePlayerAction = std::static_pointer_cast<Actions::LocatePlayerAction>(action);
 
-				if(action->name == "LocatePlayerAction") {
-					auto locatePlayerAction = std::static_pointer_cast<Actions::LocatePlayerAction>(action);
-
-					// We need to locate a player, so search our world and see if we have that player
-					world_.forEach(
-						[&](auto& chunk) {
-							chunk->forEach(
-								[&](auto& entity) {
-									if(dynamic_cast<Entities::Player*>(entity.get())) {
-										auto player = std::static_pointer_cast<Entities::Player>(entity);
-
-										if(player->username == locatePlayerAction->username) {
-											// Found the player!
-											print("Found player: " + locatePlayerAction->username);
-											communicator_.isend(std::stoi(locatePlayerAction->source), 0, std::make_shared<Actions::FoundPlayerAction>(std::to_string(communicator_.rank()), locatePlayerAction->username));
-										}
+							// We need to locate a player, so search our world and see if we have that player
+							bool found = false;
+							world_.forEach(
+								[&](auto& chunk) {
+									if(found) {
+										return;
 									}
+
+									chunk->forEach(
+										[&](auto& entity) {
+											if(found) {
+												return;
+											}
+
+											if(dynamic_cast<Entities::Player*>(entity.get())) {
+												auto player = std::static_pointer_cast<Entities::Player>(entity);
+
+												if(player->username == locatePlayerAction->username) {
+													found = true;
+
+													// Found the player!
+													print("Found player: " + locatePlayerAction->username);
+
+													std::stringstream stringStream2;
+													boost::archive::text_oarchive archive2(stringStream2);
+													archive2.register_type(static_cast<Actions::FoundPlayerAction*>(nullptr));
+													auto foundPlayerAction = std::make_shared<Actions::FoundPlayerAction>(communicator_.rank(), locatePlayerAction->username);
+													archive2 << BOOST_SERIALIZATION_NVP(foundPlayerAction);
+
+													communicator_.isend(locatePlayerAction->source, 0, stringStream2.str());
+												}
+											}
+										}
+									);
 								}
 							);
-						}
-					);
-				} else if(action->name == "FoundPlayerAction") {
-					auto foundPlayerAction = std::static_pointer_cast<Actions::FoundPlayerAction>(action);
+						} else if(action->name == "FoundPlayerAction") {
+							auto foundPlayerAction = std::static_pointer_cast<Actions::FoundPlayerAction>(action);
 
-					// We found the player, notify the corresponding connection
-					for(auto& connection : connections_) {
-						if(connection->username_ == foundPlayerAction->username) {
-							connection->serverRank_ = std::stoi(foundPlayerAction->source);
-						}
-					}
-				} else if(action->name == "GetWorldAction") {
-					auto getWorldAction = std::static_pointer_cast<Actions::GetWorldAction>(action);
+							// We found the player, notify the corresponding connection
+							for(auto& connection : connections_) {
+								if(connection->username_ == foundPlayerAction->username) {
+									connection->serverRank_ = foundPlayerAction->source;
 
-					// We need to send the world to the requester
-					communicator_.isend(std::stoi(getWorldAction->source), 0, std::make_shared<Actions::RefreshWorldAction>(std::to_string(communicator_.rank()), world_));
-				} else if(action->name == "RefreshWorldAction") {
-					auto refreshWorldAction = std::static_pointer_cast<Actions::RefreshWorldAction>(action);
+									print("Connected server " + std::to_string(connection->serverRank_) + " to player " + connection->username_);
+								}
+							}
+						} else if(action->name == "GetWorldAction") {
+							auto getWorldAction = std::static_pointer_cast<Actions::GetWorldAction>(action);
 
-					// We received the world from a server, forward it to all clients
-					for(auto& connection : connections_) {
-						if(connection->serverRank_ == std::stoi(refreshWorldAction->source)) {
-							// Serialize and send the world
-							std::stringstream stringStream;
-							boost::archive::text_oarchive archive(stringStream);
-							archive << BOOST_SERIALIZATION_NVP(refreshWorldAction);
+							std::stringstream stringStream2;
+							boost::archive::text_oarchive archive2(stringStream2);
+							archive2.register_type(static_cast<Actions::FoundPlayerAction*>(nullptr));
+							auto refreshWorldAction = std::make_shared<Actions::RefreshWorldAction>(communicator_.rank(), world_);
+							archive2 << BOOST_SERIALIZATION_NVP(refreshWorldAction);
 
-							connection->send(stringStream.str());
+							print("Sending world to " + getWorldAction->source);
+
+							// We need to send the world to the requester
+							communicator_.isend(getWorldAction->source, 0, refreshWorldAction);
+						} else if(action->name == "RefreshWorldAction") {
+							auto refreshWorldAction = std::static_pointer_cast<Actions::RefreshWorldAction>(action);
+
+							// We received the world from a server, forward it to all clients
+							for(auto& connection : connections_) {
+								if(connection->serverRank_ == refreshWorldAction->source) {
+									// Serialize and send the world
+									std::stringstream stringStream;
+									boost::archive::text_oarchive archive(stringStream);
+									archive << BOOST_SERIALIZATION_NVP(refreshWorldAction);
+
+									print("Sending refresh world action to " + connection->username_);
+
+									connection->send(stringStream.str());
+								}
+							}
 						}
 					}
 				}
 			}
+		).detach();
 
-			// Update world
-			world_.update();
+		// Start game loop
+		for(;;) {
+			{
+				std::lock_guard<std::mutex> lock(mutex_);
+
+				// Request game state from all servers that have active players
+				if(isMatchmaker()) {
+					print("Requesting game state from active servers");
+					
+					std::set<int> serversToRefresh;
+					for(auto& connection : connections_) {
+						if(connection->serverRank_ >= 0) {
+							serversToRefresh.insert(connection->serverRank_);
+						}
+					}
+					
+					std::stringstream stringStream;
+					boost::archive::text_oarchive archive(stringStream);
+					archive.register_type(static_cast<Actions::GetWorldAction*>(nullptr));
+					auto getWorldAction = std::make_shared<Actions::GetWorldAction>(communicator_.rank());
+					archive << BOOST_SERIALIZATION_NVP(getWorldAction);
+
+					for(auto& rank : serversToRefresh) {
+						communicator_.isend(rank, 0, stringStream.str());
+					}
+				}
+
+				print("Executing main loop...");
+
+				// Synchronize updates between servers
+				communicator_.barrier();
+
+				// Update world
+				world_.update();
+			}
 
 			// Wait a second
 			usleep(1000000);

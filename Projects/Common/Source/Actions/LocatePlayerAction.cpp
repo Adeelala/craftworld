@@ -6,6 +6,6 @@
 BOOST_CLASS_EXPORT_GUID(CraftWorld::Actions::LocatePlayerAction, "LocatePlayerAction")
 
 namespace CraftWorld::Actions {
-	LocatePlayerAction::LocatePlayerAction(const std::string& source, const std::string& username) : Action("LocatePlayerAction", source), username(username) {
+	LocatePlayerAction::LocatePlayerAction(const int& source, const std::string& username) : Action("LocatePlayerAction", source), username(username) {
 	}
 }

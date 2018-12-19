@@ -15,17 +15,17 @@ using namespace CraftWorld;
  * @param data The data.
  */
 void dataHandler(const std::string& data) {
-	// Create serialization stream
-	std::stringstream stringStream;
-	stringStream << data;
-	boost::archive::text_iarchive archive(stringStream);
-
-	// Deserialize the World
-	World world;
-	archive >> BOOST_SERIALIZATION_NVP(world);
-
-	// TODO: overwrite the current world in client to this new one
-	std::cout << "Deserialized world!" << std::endl;
+	//// Create serialization stream
+	//std::stringstream stringStream;
+	//stringStream << data;
+	//boost::archive::text_iarchive archive(stringStream);
+	//
+	//// Deserialize the World
+	//World world;
+	//archive >> BOOST_SERIALIZATION_NVP(world);
+	//
+	//// TODO: overwrite the current world in client to this new one
+	//std::cout << "Deserialized world!" << std::endl;
 }
 
 int main(int argc, char* argv[]) {

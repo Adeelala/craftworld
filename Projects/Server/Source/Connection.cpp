@@ -24,6 +24,8 @@ namespace CraftWorld {
 			boost::asio::dynamic_buffer(receiveMessage_),
 			"\n\n",
 			[&](const boost::system::error_code& errorCode, std::size_t length) {
+				std::lock_guard<std::mutex> lock(server_.mutex_);
+				
 				if(!errorCode) {
 					// Process incoming messages
 					std::stringstream stringStream;
@@ -44,11 +46,17 @@ namespace CraftWorld {
 							// Set the username
 							username_ = connectAction->username;
 
+							std::stringstream stringStream2;
+							boost::archive::text_oarchive archive2(stringStream2);
+							archive2.register_type(static_cast<Actions::LocatePlayerAction*>(nullptr));
+							auto locatePlayerAction = std::make_shared<Actions::LocatePlayerAction>(server_.communicator_.rank(), connectAction->username);
+							archive2 << BOOST_SERIALIZATION_NVP(locatePlayerAction);
+
 							// Locate the server that has the player
 							for(int rank = 0; rank < server_.communicator_.size(); ++rank) {
 								server_.print("Locating player: " + connectAction->username);
 
-								server_.communicator_.isend(rank, 0, std::make_shared<Actions::LocatePlayerAction>(std::to_string(server_.communicator_.rank()), connectAction->username));
+								server_.communicator_.isend(rank, 0, stringStream2.str());
 							}
 						}
 					}
@@ -64,6 +72,8 @@ namespace CraftWorld {
 	}
 
 	void Connection::send(const std::string& message) {
+		std::lock_guard<std::mutex> lock(server_.mutex_);
+		
 		sendMessage_ = message + "\n\n";
 
 		// Send message
