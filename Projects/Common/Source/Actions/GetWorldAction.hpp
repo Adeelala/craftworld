@@ -3,7 +3,6 @@
 #include <string>
 
 #include "Action.hpp"
-#include "../World.hpp"
 
 namespace CraftWorld::Actions {
 	class GetWorldAction :

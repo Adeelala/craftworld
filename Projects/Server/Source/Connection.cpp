@@ -25,15 +25,10 @@ namespace CraftWorld {
 			"\n\n",
 			[&](const boost::system::error_code& errorCode, std::size_t length) {
 				std::lock_guard<std::mutex> lock(server_.mutex_);
-				
+
 				if(!errorCode) {
 					// Process incoming messages
-					std::stringstream stringStream;
-					stringStream << receiveMessage_.substr(0, receiveMessage_.size() - 2);
-					boost::archive::text_iarchive archive(stringStream);
-					archive.register_type(static_cast<Actions::ConnectAction*>(nullptr));
-					std::shared_ptr<Actions::Action> action;
-					archive >> BOOST_SERIALIZATION_NVP(action);
+					auto action = server_.fromString(receiveMessage_.substr(0, receiveMessage_.size() - 2));
 
 					// Get the action that needs to be executed
 					if(action != nullptr) {
@@ -46,17 +41,11 @@ namespace CraftWorld {
 							// Set the username
 							username_ = connectAction->username;
 
-							std::stringstream stringStream2;
-							boost::archive::text_oarchive archive2(stringStream2);
-							archive2.register_type(static_cast<Actions::LocatePlayerAction*>(nullptr));
-							auto locatePlayerAction = std::make_shared<Actions::LocatePlayerAction>(server_.communicator_.rank(), connectAction->username);
-							archive2 << BOOST_SERIALIZATION_NVP(locatePlayerAction);
-
 							// Locate the server that has the player
 							for(int rank = 0; rank < server_.communicator_.size(); ++rank) {
 								server_.print("Locating player: " + connectAction->username);
 
-								server_.communicator_.isend(rank, 0, stringStream2.str());
+								server_.send(std::make_shared<Actions::LocatePlayerAction>(server_.communicator_.rank(), connectAction->username), rank);
 							}
 						}
 					}
@@ -73,7 +62,7 @@ namespace CraftWorld {
 
 	void Connection::send(const std::string& message) {
 		std::lock_guard<std::mutex> lock(server_.mutex_);
-		
+
 		sendMessage_ = message + "\n\n";
 
 		// Send message
