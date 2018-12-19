@@ -66,7 +66,7 @@ Usually this is at `{projectRoot}/cmake-build-debug/Projects/Server`. This folde
 To run the executable, use the following command:
 
 ```bash
-mpirun --oversubscribe -n {nodeCount} ./CraftWorld-Server
+mpirun --oversubscribe -n {nodeCount} ./CraftWorld-Server {matchmakerCount} {matchmakerBasePort} {xChunks} {yChunks} {zChunks} {xBlocks} {yBlocks} {zBlocks}
 ```
 
 Replace `{nodeCount}` with the amount of server nodes you want to run. One of these will be the matchmaker and the others will be the slaves.
